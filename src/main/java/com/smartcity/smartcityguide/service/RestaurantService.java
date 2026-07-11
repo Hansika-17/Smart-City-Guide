@@ -1,0 +1,26 @@
+package com.smartcity.smartcityguide.service;
+
+import com.smartcity.smartcityguide.entity.Restaurant;
+
+import java.util.List;
+
+public interface RestaurantService {
+
+    Restaurant addRestaurant(Restaurant restaurant);
+
+    Restaurant updateRestaurant(Long id, Restaurant restaurant);
+
+    void deleteRestaurant(Long id);
+
+    Restaurant getRestaurantById(Long id);
+
+    List<Restaurant> getAllRestaurants();
+
+    List<Restaurant> getRestaurantsByCity(String city);
+
+    List<Restaurant> getRestaurantsByCuisine(String cuisine);
+
+    List<Restaurant> searchRestaurantByName(String restaurantName);
+
+    List<Restaurant> getRestaurantsByRating(Double rating);
+}
