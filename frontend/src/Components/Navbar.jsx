@@ -52,6 +52,17 @@ function Navbar() {
                 <Link to="/restaurants" style={linkStyle}>Restaurants</Link>
                 <Link to="/attractions" style={linkStyle}>Attractions</Link>
                 <Link to="/events" style={linkStyle}>Events</Link>
+				<Link
+				    to="/emergency"
+				    style={{
+				        color: "#E53935",
+				        textDecoration: "none",
+				        fontWeight: "700",
+				        fontSize: "17px"
+				    }}
+				>
+				    🚨 Emergency
+				</Link>
             </div>
         </nav>
     );

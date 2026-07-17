@@ -6,6 +6,7 @@ import Restaurants from "./pages/Restaurants";
 import Attractions from "./pages/Attractions";
 import Events from "./pages/Events";
 import Assistant from "./pages/Assistant";
+import Emergency from "./pages/Emergency";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/attractions" element={<Attractions />} />
         <Route path="/events" element={<Events />} />
 		<Route path="/assistant" element={<Assistant />} />
+		<Route path="/emergency" element={<Emergency />} />
       </Routes>
     </BrowserRouter>
   );

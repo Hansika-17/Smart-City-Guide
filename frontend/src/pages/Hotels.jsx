@@ -1,7 +1,18 @@
 import Navbar from "../components/Navbar";
 import "../styles/Hotels.css";
+import { useEffect, useState } from "react";
 
 function Hotels() {
+	
+	const [hotels, setHotels] = useState([]);
+	
+	useEffect(() => {
+	    fetch("http://localhost:8080/api/hotels")
+	        .then((response) => response.json())
+	        .then((data) => setHotels(data))
+	        .catch((error) => console.error("Error fetching hotels:", error));
+	}, []);
+	
     return (
         <>
             <Navbar />
@@ -23,39 +34,30 @@ function Hotels() {
                     />
                 </div>
 
-                <div className="hotel-grid">
+				{hotels.map((hotel) => (
+				    <div className="hotel-card" key={hotel.id}>
 
-                    <div className="hotel-card">
-                        <div className="hotel-image"></div>
+				        <div className="hotel-image">
+				            <img
+				                src={hotel.imageUrl}
+				                alt={hotel.hotelName}
+				            />
+				        </div>
 
-                        <h2>Grand Palace Hotel</h2>
+				        <h2>{hotel.hotelName}</h2>
 
-                        <p>⭐ 4.8 • Hyderabad</p>
+				        <p>
+				            ⭐ {hotel.rating} • {hotel.city}
+				        </p>
 
-                        <button>View Details</button>
-                    </div>
+				        <button
+				            onClick={() => window.open(hotel.website, "_blank")}
+				        >
+				            Book Now
+				        </button>
 
-                    <div className="hotel-card">
-                        <div className="hotel-image"></div>
-
-                        <h2>Sunset Resort</h2>
-
-                        <p>⭐ 4.7 • Goa</p>
-
-                        <button>View Details</button>
-                    </div>
-
-                    <div className="hotel-card">
-                        <div className="hotel-image"></div>
-
-                        <h2>Royal Heights</h2>
-
-                        <p>⭐ 4.9 • Jaipur</p>
-
-                        <button>View Details</button>
-                    </div>
-
-                </div>
+				    </div>
+				))}
 
             </div>
 

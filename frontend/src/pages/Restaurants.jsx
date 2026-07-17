@@ -1,7 +1,18 @@
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import "../styles/Restaurants.css";
 
 function Restaurants() {
+	
+	const [restaurants, setRestaurants] = useState([]);
+	
+	useEffect(() => {
+	    fetch("http://localhost:8080/api/restaurants")
+	        .then((response) => response.json())
+	        .then((data) => setRestaurants(data))
+	        .catch((error) => console.error(error));
+	}, []);
+	
     return (
         <>
             <Navbar />
@@ -24,39 +35,32 @@ function Restaurants() {
                     />
                 </div>
 
-                <div className="restaurant-grid">
+				<div className="restaurant-grid">
+				    {restaurants.map((restaurant) => (
+				        <div className="restaurant-card" key={restaurant.id}>
 
-                    <div className="restaurant-card">
-                        <div className="restaurant-image"></div>
+				            <div className="restaurant-image">
+				                <img
+				                    src={restaurant.imageUrl}
+				                    alt={restaurant.restaurantName}
+				                />
+				            </div>
 
-                        <h2>Spice Garden</h2>
+				            <h2>{restaurant.restaurantName}</h2>
 
-                        <p>⭐ 4.7 • Hyderabad</p>
+				            <p>
+				                ⭐ {restaurant.rating} • {restaurant.city}
+				            </p>
 
-                        <button>View Details</button>
-                    </div>
+				            <button
+				                onClick={() => window.open(restaurant.mapLink, "_blank")}
+				            >
+				                📍 Get Directions
+				            </button>
 
-                    <div className="restaurant-card">
-                        <div className="restaurant-image"></div>
-
-                        <h2>Olive Bistro</h2>
-
-                        <p>⭐ 4.9 • Bengaluru</p>
-
-                        <button>View Details</button>
-                    </div>
-
-                    <div className="restaurant-card">
-                        <div className="restaurant-image"></div>
-
-                        <h2>Coastal Kitchen</h2>
-
-                        <p>⭐ 4.8 • Goa</p>
-
-                        <button>View Details</button>
-                    </div>
-
-                </div>
+				        </div>
+				    ))}
+				</div>
 
             </div>
 

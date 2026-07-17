@@ -47,6 +47,9 @@ public class Hotel {
 
     @Column(length = 500)
     private String imageUrl;
+    
+    @Column(length = 500)
+    private String website;
 
     @Min(value = 0, message = "Rating cannot be less than 0")
     @Max(value = 5, message = "Rating cannot be greater than 5")

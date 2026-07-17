@@ -56,4 +56,7 @@ public class Restaurant {
     @Max(value = 5, message = "Rating cannot be greater than 5")
     @Column(nullable = false)
     private Double rating;
+    
+    @Column(length = 500)
+    private String mapLink;
 }
