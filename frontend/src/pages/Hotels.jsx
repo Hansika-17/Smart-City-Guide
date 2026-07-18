@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 function Hotels() {
 	
 	const [hotels, setHotels] = useState([]);
+	const [search, setSearch] = useState("");
 	
 	useEffect(() => {
 	    fetch("http://localhost:8080/api/hotels")
@@ -29,12 +30,20 @@ function Hotels() {
 
                 <div className="hotel-search">
                     <input
-                        type="text"
-                        placeholder="🔍 Search hotels..."
-                    />
+    					type="text"
+    					placeholder="🔍 Search hotels..."
+    					value={search}
+    					onChange={(e) => setSearch(e.target.value)}
+						/>
                 </div>
 
-				{hotels.map((hotel) => (
+				{hotels
+    					.filter((hotel) =>
+        				hotel.hotelName.toLowerCase().includes(search.toLowerCase()) ||
+        				hotel.city.toLowerCase().includes(search.toLowerCase())
+    					)
+    				.map((hotel) => (
+
 				    <div className="hotel-card" key={hotel.id}>
 
 				        <div className="hotel-image">
