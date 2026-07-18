@@ -1,0 +1,58 @@
+.photo-collage{
+    position: relative;
+    width: 900px;
+    height: 380px;
+    margin: 60px auto 0;
+}
+
+.photo{
+    position: absolute;
+    width: 220px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 5px solid white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+    transition: transform 0.3s ease;
+}
+
+.photo:hover{
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+.p1{
+    top:20px;
+    left:90px;
+    transform:rotate(-8deg);
+}
+
+.p2{
+    top:0;
+    left:320px;
+    transform:rotate(6deg);
+}
+
+.p3{
+    top:40px;
+    left:550px;
+    transform:rotate(-5deg);
+}
+
+.p4{
+    top:180px;
+    left:170px;
+    transform:rotate(5deg);
+}
+
+.p5{
+    top:170px;
+    left:390px;
+    transform:rotate(-7deg);
+}
+
+.p6{
+    top:190px;
+    left:610px;
+    transform:rotate(8deg);
+}

@@ -1,0 +1,116 @@
+.emergency-page {
+    padding: 40px;
+    background: #f8f9fc;
+    min-height: 100vh;
+}
+
+.emergency-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.emergency-header h1 {
+    font-size: 42px;
+    color: #5E3A72;
+    margin-bottom: 10px;
+}
+
+.emergency-header p {
+    color: #666;
+    font-size: 18px;
+}
+
+.emergency-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.emergency-card {
+    background: white;
+    border-radius: 18px;
+	border-left: 6px solid #E53935;
+    padding: 30px;
+    min-height: 320px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    transition: 0.3s;
+}
+
+.emergency-card:hover {
+    transform: translateY(-8px);
+}
+
+.emergency-card:hover {
+    transform: translateY(-6px);
+}
+
+.emergency-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 35px rgba(0,0,0,0.18);
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.button-group button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Call button */
+.button-group a:first-child button {
+    background: #28a745;
+}
+
+.button-group a:first-child button:hover {
+    background: #218838;
+}
+
+/* Find Nearby button */
+.button-group button:last-child {
+    background: #0d6efd;
+}
+
+.button-group button:last-child:hover {
+    background: #0b5ed7;
+}
+
+.phone-number {
+    background: #FFE5E5;
+    color: #C62828;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin: 15px 0;
+}
+
+.emergency-search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 35px;
+}
+
+.emergency-search input {
+    width: 420px;
+    max-width: 90%;
+    padding: 14px 20px;
+    border: 2px solid #ddd;
+    border-radius: 30px;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.emergency-search input:focus {
+    border-color: #5E3A72;
+    box-shadow: 0 0 10px rgba(94, 58, 114, 0.2);
+}
