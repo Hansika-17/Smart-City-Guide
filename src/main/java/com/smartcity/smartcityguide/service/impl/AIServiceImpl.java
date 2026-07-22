@@ -7,7 +7,7 @@ import com.smartcity.smartcityguide.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.smartcity.smartcityguide.entity.Restaurant;
-
+import com.smartcity.smartcityguide.service.ai.GeminiService;
 import java.util.List;
 
 @Service
@@ -18,6 +18,9 @@ public class AIServiceImpl implements AIService {
 
     @Autowired
     private RestaurantService restaurantService;
+
+    @Autowired
+    private GeminiService geminiService;
 
     @Override
     public String chat(String message) {
@@ -32,7 +35,7 @@ public class AIServiceImpl implements AIService {
             return handleRestaurantQuery(lowerMessage);
     }
 
-        return "Sorry! I can currently answer only hotel and restaurant related queries.";
+        return geminiService.askGemini(message);
     }
 
     private String handleHotelQuery(String message) {
