@@ -59,4 +59,16 @@ public class Restaurant {
     
     @Column(length = 500)
     private String mapLink;
+
+    @Column(name = "price_range", length = 50)
+    private String priceRange;
+
+    @Column(name = "best_for", length = 255)
+    private String bestFor;
+
+    @Column(name = "average_cost")
+    private String averageCost;
+
+    @Column(name = "opening_hours", length = 100)
+    private String openingHours;
 }

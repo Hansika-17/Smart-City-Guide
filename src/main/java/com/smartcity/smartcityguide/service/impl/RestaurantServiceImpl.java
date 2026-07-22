@@ -35,6 +35,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         existingRestaurant.setImageUrl(restaurant.getImageUrl());
         existingRestaurant.setCuisine(restaurant.getCuisine());
         existingRestaurant.setRating(restaurant.getRating());
+        existingRestaurant.setPriceRange(restaurant.getPriceRange());
+existingRestaurant.setBestFor(restaurant.getBestFor());
+existingRestaurant.setAverageCost(restaurant.getAverageCost());
+existingRestaurant.setOpeningHours(restaurant.getOpeningHours());
 
         return restaurantRepository.save(existingRestaurant);
     }
@@ -78,4 +82,14 @@ public class RestaurantServiceImpl implements RestaurantService {
     public List<Restaurant> getRestaurantsByRating(Double rating) {
         return restaurantRepository.findByRatingGreaterThanEqual(rating);
     }
+
+    @Override
+public List<Restaurant> getRestaurantsByCityAndPriceRange(String city, String priceRange) {
+    return restaurantRepository.findByCityAndPriceRange(city, priceRange);
+}
+
+@Override
+public List<Restaurant> getRestaurantsByPriceRange(String priceRange) {
+    return restaurantRepository.findByPriceRange(priceRange);
+}
 }

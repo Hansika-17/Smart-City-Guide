@@ -23,4 +23,8 @@ public interface RestaurantService {
     List<Restaurant> searchRestaurantByName(String restaurantName);
 
     List<Restaurant> getRestaurantsByRating(Double rating);
+
+    List<Restaurant> getRestaurantsByCityAndPriceRange(String city, String priceRange);
+
+    List<Restaurant> getRestaurantsByPriceRange(String priceRange);
 }
