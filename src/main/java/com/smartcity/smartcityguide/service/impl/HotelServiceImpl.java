@@ -1,13 +1,14 @@
 package com.smartcity.smartcityguide.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.smartcity.smartcityguide.entity.Hotel;
 import com.smartcity.smartcityguide.exception.ResourceNotFoundException;
 import com.smartcity.smartcityguide.repository.HotelRepository;
 import com.smartcity.smartcityguide.service.HotelService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class HotelServiceImpl implements HotelService {
