@@ -1,49 +1,28 @@
 package com.smartcity.smartcityguide.controller;
 
-import com.smartcity.smartcityguide.recommendation.dto.GroupRecommendationRequest;
-import com.smartcity.smartcityguide.recommendation.dto.RecommendationRequest;
-import com.smartcity.smartcityguide.recommendation.engine.RecommendationEngine;
-import com.smartcity.smartcityguide.recommendation.model.RecommendationResult;
+import com.smartcity.smartcityguide.dto.RecommendationRequest;
+import com.smartcity.smartcityguide.dto.RecommendationResponse;
+import com.smartcity.smartcityguide.service.RecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/recommendation")
+@RequestMapping("/api/recommendations")
 @CrossOrigin(origins = "*")
 public class RecommendationController {
 
     @Autowired
-    private RecommendationEngine recommendationEngine;
+    private RecommendationService recommendationService;
 
-    // Solo Recommendation
-    @PostMapping("/solo")
-    public ResponseEntity<RecommendationResult> generateSoloRecommendation(
+    @PostMapping
+    public ResponseEntity<RecommendationResponse> getRecommendations(
             @RequestBody RecommendationRequest request) {
 
-        return ResponseEntity.ok(
-                recommendationEngine.generateSoloItinerary(request)
-        );
-    }
+        RecommendationResponse response =
+                recommendationService.getRecommendations(request);
 
-    // Group Recommendation
-    @PostMapping("/group")
-    public ResponseEntity<RecommendationResult> generateGroupRecommendation(
-            @RequestBody GroupRecommendationRequest request) {
-
-        return ResponseEntity.ok(
-                recommendationEngine.generateGroupItinerary(request)
-        );
-    }
-
-    // Surprise Me
-    @PostMapping("/surprise")
-    public ResponseEntity<RecommendationResult> surpriseMe(
-            @RequestBody RecommendationRequest request) {
-
-        return ResponseEntity.ok(
-                recommendationEngine.surpriseMe(request)
-        );
+        return ResponseEntity.ok(response);
     }
 
 }

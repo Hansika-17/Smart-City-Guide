@@ -59,4 +59,13 @@ public class Hotel {
     @NotBlank(message = "Category is required")
     @Column(nullable = false, length = 30)
     private String category;
+
+    @Column(name = "price_range", length = 50)
+    private String priceRange;
+
+    @Column(name = "best_for", length = 255)
+    private String bestFor;
+
+    @Column(length = 500)
+    private String amenities;
 }

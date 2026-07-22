@@ -33,12 +33,32 @@ public class RestaurantController {
 
     // Get All Restaurants
     @GetMapping
-    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+public ResponseEntity<List<Restaurant>> getRestaurants(
+        @RequestParam(required = false) String city,
+        @RequestParam(required = false) String priceRange) {
 
+    if (city != null && priceRange != null) {
         return ResponseEntity.ok(
-                restaurantService.getAllRestaurants()
+                restaurantService.getRestaurantsByCityAndPriceRange(city, priceRange)
         );
     }
+
+    if (city != null) {
+        return ResponseEntity.ok(
+                restaurantService.getRestaurantsByCity(city)
+        );
+    }
+
+    if (priceRange != null) {
+        return ResponseEntity.ok(
+                restaurantService.getRestaurantsByPriceRange(priceRange)
+        );
+    }
+
+    return ResponseEntity.ok(
+            restaurantService.getAllRestaurants()
+    );
+}
 
 
     // Get Restaurant By ID

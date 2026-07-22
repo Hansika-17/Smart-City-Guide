@@ -23,4 +23,8 @@ public interface HotelService {
     List<Hotel> searchHotelByName(String hotelName);
 
     List<Hotel> getHotelsByRating(Double rating);
+
+    List<Hotel> getHotelsByCityAndPriceRange(String city, String priceRange);
+
+    List<Hotel> getHotelsByPriceRange(String priceRange);
 }

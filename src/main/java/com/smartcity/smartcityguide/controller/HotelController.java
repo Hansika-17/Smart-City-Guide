@@ -32,12 +32,32 @@ public class HotelController {
 
     // Get All Hotels
     @GetMapping
-    public ResponseEntity<List<Hotel>> getAllHotels() {
+public ResponseEntity<List<Hotel>> getHotels(
+        @RequestParam(required = false) String city,
+        @RequestParam(required = false) String priceRange) {
 
+    if (city != null && priceRange != null) {
         return ResponseEntity.ok(
-                hotelService.getAllHotels()
+                hotelService.getHotelsByCityAndPriceRange(city, priceRange)
         );
     }
+
+    if (city != null) {
+        return ResponseEntity.ok(
+                hotelService.getHotelsByCity(city)
+        );
+    }
+
+    if (priceRange != null) {
+        return ResponseEntity.ok(
+                hotelService.getHotelsByPriceRange(priceRange)
+        );
+    }
+
+    return ResponseEntity.ok(
+            hotelService.getAllHotels()
+    );
+}
 
 
     // Get Hotel By ID
