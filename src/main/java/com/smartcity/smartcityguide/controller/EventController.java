@@ -34,7 +34,21 @@ public class EventController {
         return eventService.getAllEvents();
     }
 
+    // Get events by city using query parameter
+    @GetMapping(params = "city")
+    public List<Event> getEventsByCityParam(
+              @RequestParam String city) {
 
+         return eventService.getEventsByCity(city);
+    }
+
+   // Get events by category using query parameter
+   @GetMapping(params = "category")
+   public List<Event> getEventsByCategoryParam(
+            @RequestParam String category) {
+
+        return eventService.getEventsByCategory(category);
+    }
 
     // Get event by id
 

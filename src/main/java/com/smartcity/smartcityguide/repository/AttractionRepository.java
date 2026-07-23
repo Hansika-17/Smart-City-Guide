@@ -9,7 +9,7 @@ public interface AttractionRepository extends JpaRepository<Attraction, Long> {
 
     List<Attraction> findByCity(String city);
 
-    List<Attraction> findByPlaceNameContainingIgnoreCase(String placeName);
+    List<Attraction> findByAttractionNameContainingIgnoreCase(String attractionName);
 
     List<Attraction> findByRatingGreaterThanEqual(Double rating);
 }

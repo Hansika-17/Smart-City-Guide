@@ -59,4 +59,12 @@ public class AttractionController {
     public ResponseEntity<List<Attraction>> getByRating(@PathVariable Double rating) {
         return ResponseEntity.ok(service.getAttractionsByRating(rating));
     }
+
+    
+    @GetMapping(params = "city")
+    public ResponseEntity<List<Attraction>> getByCityParam(
+           @RequestParam String city) {
+
+         return ResponseEntity.ok(service.getAttractionsByCity(city));
+    }
 }

@@ -27,12 +27,17 @@ public class AttractionServiceImpl implements AttractionService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Attraction not found with id: " + id));
 
-        existing.setPlaceName(attraction.getPlaceName());
+        existing.setAttractionName(attraction.getAttractionName());
         existing.setCity(attraction.getCity());
+        existing.setCategory(attraction.getCategory());
+        existing.setAddress(attraction.getAddress());
+        existing.setRating(attraction.getRating());
+        existing.setEntryFee(attraction.getEntryFee());
+        existing.setTimeRequired(attraction.getTimeRequired());
         existing.setDescription(attraction.getDescription());
         existing.setImageUrl(attraction.getImageUrl());
-        existing.setTimings(attraction.getTimings());
-        existing.setRating(attraction.getRating());
+        existing.setMapLink(attraction.getMapLink());
+        existing.setBestFor(attraction.getBestFor());
 
         return repository.save(existing);
     }
@@ -67,7 +72,7 @@ public class AttractionServiceImpl implements AttractionService {
 
     @Override
     public List<Attraction> searchAttractionByName(String name) {
-        return repository.findByPlaceNameContainingIgnoreCase(name);
+        return repository.findByAttractionNameContainingIgnoreCase(name);
     }
 
     @Override
