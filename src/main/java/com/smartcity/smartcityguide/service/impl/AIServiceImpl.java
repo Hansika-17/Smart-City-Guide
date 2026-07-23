@@ -44,11 +44,13 @@ public class AIServiceImpl implements AIService {
 
     if (message.contains("in ")) {
 
-        String city = message.substring(message.indexOf("in") + 2).trim();
+    	String city = message.substring(message.indexOf("in") + 2).trim();
 
-        city = city.substring(0, 1).toUpperCase() + city.substring(1);
+    	city = city.replaceAll("[^a-zA-Z ]", "").trim();
 
-        hotels = hotelService.getHotelsByCity(city);
+    	city = city.substring(0, 1).toUpperCase() + city.substring(1);
+
+    	hotels = hotelService.getHotelsByCity(city);
 
     } else {
 
@@ -73,23 +75,39 @@ public class AIServiceImpl implements AIService {
 }
     private String handleRestaurantQuery(String message) {
 
-    List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+        List<Restaurant> restaurants;
 
-    if (restaurants.isEmpty()) {
-        return "No restaurants found.";
+        if (message.contains("in ")) {
+
+            String city = message.substring(message.indexOf("in") + 2).trim();
+
+            city = city.replaceAll("[^a-zA-Z ]", "").trim();
+
+            city = city.substring(0, 1).toUpperCase() + city.substring(1);
+
+            restaurants = restaurantService.getRestaurantsByCity(city);
+
+        } else {
+
+            restaurants = restaurantService.getAllRestaurants();
+
+        }
+
+        if (restaurants.isEmpty()) {
+            return "No restaurants found.";
+        }
+
+        StringBuilder response = new StringBuilder("🍽️ Restaurants Available:\n\n");
+
+        for (Restaurant restaurant : restaurants) {
+            response.append("• ")
+                    .append(restaurant.getRestaurantName())
+                    .append(" (⭐ ")
+                    .append(restaurant.getRating())
+                    .append(")\n");
+        }
+
+        return response.toString();
     }
-
-    StringBuilder response = new StringBuilder("🍽️ Restaurants Available:\n\n");
-
-    for (Restaurant restaurant : restaurants) {
-        response.append("• ")
-                .append(restaurant.getRestaurantName())
-                .append(" (⭐ ")
-                .append(restaurant.getRating())
-                .append(")\n");
-    }
-
-    return response.toString();
-}
 
 }

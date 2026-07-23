@@ -64,7 +64,10 @@ existingHotel.setAmenities(hotel.getAmenities());
 
     @Override
     public List<Hotel> getHotelsByCity(String city) {
-        return hotelRepository.findByCity(city);
+        System.out.println("Searching city: " + city);
+        List<Hotel> hotels = hotelRepository.findByCity(city);
+        System.out.println("Result: " + hotels);
+        return hotels;
     }
 
     @Override

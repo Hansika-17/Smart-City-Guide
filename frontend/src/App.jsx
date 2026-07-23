@@ -7,6 +7,8 @@ import Attractions from "./pages/Attractions";
 import Events from "./pages/Events";
 import Assistant from "./pages/Assistant";
 import Emergency from "./pages/Emergency";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -17,8 +19,10 @@ function App() {
         <Route path="/restaurants" element={<Restaurants />} />
         <Route path="/attractions" element={<Attractions />} />
         <Route path="/events" element={<Events />} />
-		<Route path="/assistant" element={<Assistant />} />
-		<Route path="/emergency" element={<Emergency />} />
+        <Route path="/assistant" element={<Assistant />} />
+        <Route path="/emergency" element={<Emergency />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );
