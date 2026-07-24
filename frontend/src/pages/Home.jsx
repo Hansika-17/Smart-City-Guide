@@ -6,11 +6,16 @@ import travel3 from "../assets/travel3.jpg";
 import travel4 from "../assets/travel4.jpg";
 import travel5 from "../assets/travel5.jpg";
 import travel6 from "../assets/travel6.jpg";
+import travel7 from "../assets/travel7.jpg";
+import travel8 from "../assets/travel8.jpg";
+import travel9 from "../assets/travel9.jpg";
+import travel10 from "../assets/travel10.jpg";
 import hotelIcon from "../assets/hotel.png";
 import restaurantIcon from "../assets/restaurants.png";
 import attractionIcon from "../assets/attractions.png";
 import eventIcon from "../assets/events.png";
 import "../styles/Home.css";
+import RecommendationWizard from "../components/RecommendationWizard";
 
 function Home() {
 	
@@ -19,57 +24,40 @@ function Home() {
         <>
             <Navbar />
 
-            <div style={{
-                textAlign: "center",
-                padding: "80px 20px 40px",
-				background: `
-				radial-gradient(ellipse at 50% 70%, rgba(212,160,55,0.40), transparent 65%),
-				linear-gradient(135deg, #8A6AAC, #A98CC6, #C6B0DA)
-				`,
-				color: "#FFFFFF"
-            }}>
-			<h1>Explore Your City Like Never Before</h1>
+            <section className="hero">
 
-			<p style={{
-			    fontSize: "18px",
-			    marginTop: "15px",
-			    maxWidth: "700px",
-			    marginInline: "auto",
-			    lineHeight: "1.8"
-			}}>
-			    Discover hidden gems, luxurious stays, delicious restaurants,
-			    exciting events, and unforgettable attractions—all in one place.
-			</p>
+				<div className="hero-left">
+					<img src={travel1} alt="" className="side-photo left1" />
+					<img src={travel2} alt="" className="side-photo left2" />
+					<img src={travel3} alt="" className="side-photo left3" />
+					<img src={travel4} alt="" className="side-photo left4" />
+					<img src={travel5} alt="" className="side-photo left5" />
+				</div>
 
-                <button
-				style={{
-				    padding: "14px 32px",
-				    fontSize: "16px",
-				    fontWeight: "600",
-				    border: "none",
-				    borderRadius: "50px",
-				    backgroundColor: "#D9B86C",
-				    color: "#2E2433",
-				    cursor: "pointer",
-				    marginTop: "25px",
-				    transition: "0.3s ease"
-				}}
-                >
-                    Explore Now
-                </button>
-				
-				<div className="photo-collage">
+				<div className="hero-center">
 
-				    <img src={travel1} alt="" className="photo p1" />
-				    <img src={travel2} alt="" className="photo p2" />
-				    <img src={travel3} alt="" className="photo p3" />
-				    <img src={travel4} alt="" className="photo p4" />
-				    <img src={travel5} alt="" className="photo p5" />
-				    <img src={travel6} alt="" className="photo p6" />
-					
+					<h1>Plan Your Perfect Trip</h1>
+
+					<p>
+						Discover hidden gems, luxurious stays, delicious restaurants,
+						exciting events, and unforgettable attractions—all in one place.
+					</p>
+
+					<RecommendationWizard />
+
+				</div>
+
+				<div className="hero-right">
+					<div className="hero-right">
+						<img src={travel6} alt="" className="side-photo right1" />
+						<img src={travel7} alt="" className="side-photo right2" />
+						<img src={travel8} alt="" className="side-photo right3" />
+						<img src={travel9} alt="" className="side-photo right4" />
+						<img src={travel10} alt="" className="side-photo right5" />
+					</div>
 				</div>
 				
-            </div>
+            </section>
 			
 			<div
 			    style={{
