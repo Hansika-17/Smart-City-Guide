@@ -5,6 +5,7 @@ import "../styles/Restaurants.css";
 function Restaurants() {
 	
 	const [restaurants, setRestaurants] = useState([]);
+	const [search, setSearch] = useState("");
 	
 	useEffect(() => {
 	    fetch("http://localhost:8080/api/restaurants")
@@ -30,13 +31,21 @@ function Restaurants() {
 
                 <div className="restaurant-search">
                     <input
-                        type="text"
-                        placeholder="🔍 Search restaurants..."
-                    />
+    type="text"
+    placeholder="🔍 Search restaurants..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+/>
                 </div>
 
 				<div className="restaurant-grid">
-				    {restaurants.map((restaurant) => (
+				    {restaurants
+    .filter((restaurant) =>
+        restaurant.restaurantName.toLowerCase().includes(search.toLowerCase()) ||
+        restaurant.city.toLowerCase().includes(search.toLowerCase())
+    )
+    .map((restaurant) => (
+		
 				        <div className="restaurant-card" key={restaurant.id}>
 
 				            <div className="restaurant-image">

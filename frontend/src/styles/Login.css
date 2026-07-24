@@ -1,0 +1,170 @@
+.login-page{
+    display:flex;
+    min-height:calc(100vh - 78px);
+}
+
+/* LEFT SIDE */
+
+.login-left{
+    width:70%;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.hero-overlay{
+
+    position:absolute;
+    inset:0;
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:flex-start;
+
+    padding-left:80px;
+
+    background:
+    linear-gradient(
+        90deg,
+        rgba(94,58,114,0.70),
+        rgba(94,58,114,0.35),
+        rgba(94,58,114,0.15)
+    );
+
+    color:white;
+}
+
+
+.hero-overlay h1{
+
+    font-size:58px;
+
+    margin-bottom:18px;
+}
+
+.hero-overlay p{
+
+    font-size:22px;
+
+    line-height:1.8;
+
+    max-width:650px;
+}
+
+/* RIGHT SIDE */
+
+.login-right{
+    width:30%;
+    background:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-content{
+    width:420px;
+}
+
+.login-content h2{
+    color:#5E3A72;
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#777;
+    margin-bottom:45px;
+    line-height:1.7;
+}
+
+.google-btn{
+
+    width:100%;
+    padding:16px;
+
+    border:none;
+    border-radius:50px;
+
+    background:#D9B86C;
+    color:#2E2433;
+
+    font-size:17px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.google-btn:hover{
+
+    transform:translateY(-2px);
+
+    background:#caa95b;
+}
+
+.divider{
+
+    text-align:center;
+
+    margin:35px 0;
+
+    color:#999;
+}
+
+.register-text{
+
+    text-align:center;
+
+    color:#666;
+
+    margin-bottom:10px;
+}
+
+.register-link{
+
+    border:none;
+
+    background:none;
+
+    color:#5E3A72;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    display:block;
+
+    margin:auto;
+}
+
+.home-link{
+
+    margin-top:45px;
+
+    border:none;
+
+    background:none;
+
+    color:#5E3A72;
+
+    cursor:pointer;
+
+    display:block;
+
+    margin-left:auto;
+
+    margin-right:auto;
+}

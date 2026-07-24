@@ -17,4 +17,18 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     List<Restaurant> findByRatingGreaterThanEqual(Double rating);
 
+    List<Restaurant> findByPriceRange(String priceRange);
+
+List<Restaurant> findByBestForContainingIgnoreCase(String bestFor);
+
+List<Restaurant> findByCityAndPriceRange(String city, String priceRange);
+
+List<Restaurant> findByCityAndBestForContainingIgnoreCase(String city, String bestFor);
+
+List<Restaurant> findByCityAndPriceRangeAndBestForContainingIgnoreCase(
+        String city,
+        String priceRange,
+        String bestFor
+);
+
 }
