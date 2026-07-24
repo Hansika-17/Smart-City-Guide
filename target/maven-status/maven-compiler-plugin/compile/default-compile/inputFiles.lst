@@ -1,9 +1,13 @@
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\config\SecurityConfig.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\controller\AttractionController.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\controller\EventController.java
+D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\controller\GroupRecommendationController.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\controller\HotelController.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\controller\RecommendationController.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\controller\RestaurantController.java
+D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\dto\GroupMemberRequest.java
+D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\dto\GroupRecommendationRequest.java
+D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\dto\GroupRecommendationResponse.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\dto\RecommendationRequest.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\dto\RecommendationResponse.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\entity\Attraction.java
@@ -18,9 +22,11 @@ D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\reposito
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\repository\RestaurantRepository.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\AttractionService.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\EventService.java
+D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\GroupRecommendationService.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\HotelService.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\impl\AttractionServiceImpl.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\impl\EventServiceImpl.java
+D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\impl\GroupRecommendationServiceImpl.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\impl\HotelServiceImpl.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\impl\RecommendationServiceImpl.java
 D:\Projects\Smart-City-Guide\src\main\java\com\smartcity\smartcityguide\service\impl\RestaurantServiceImpl.java

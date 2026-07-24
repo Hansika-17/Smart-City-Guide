@@ -38,14 +38,71 @@ public class RecommendationServiceImpl implements RecommendationService {
         RecommendationResponse response = new RecommendationResponse();
 
         List<Hotel> hotels =
-                hotelRepository.findByCityAndPriceRange(
-                        request.getCity(),
-                        request.getPriceRange());
+            hotelRepository.findByCity(request.getCity());
+            // Filter hotels based on selected budget
+if (request.getPriceRange() != null && !request.getPriceRange().isBlank()) {
+
+    String budget = request.getPriceRange().toLowerCase();
+
+    hotels.removeIf(hotel -> {
+
+        if (hotel.getPriceRange() == null) {
+            return true;
+        }
+
+        String price = hotel.getPriceRange().toLowerCase();
+
+        switch (budget) {
+
+    case "budget":
+        // No budget hotels in DB, so recommend Premium hotels
+        return !price.contains("premium");
+
+    case "mid-range":
+        // Recommend Premium and Luxury
+        return !(price.contains("premium") || price.contains("luxury"));
+
+    case "luxury":
+        // Only Luxury hotels
+        return !price.contains("luxury");
+
+    default:
+        return false;
+}
+    });
+}
 
         List<Restaurant> restaurants =
-                restaurantRepository.findByCityAndPriceRange(
-                        request.getCity(),
-                        request.getPriceRange());
+            restaurantRepository.findByCity(request.getCity());
+            // Filter restaurants based on selected budget
+if (request.getPriceRange() != null && !request.getPriceRange().isBlank()) {
+
+    String budget = request.getPriceRange().toLowerCase();
+
+    restaurants.removeIf(restaurant -> {
+
+        if (restaurant.getPriceRange() == null) {
+            return true;
+        }
+
+        String price = restaurant.getPriceRange().toLowerCase();
+
+        switch (budget) {
+
+            case "budget":
+                return price.contains("premium");
+
+            case "mid-range":
+                return false;
+
+            case "luxury":
+                return !price.contains("premium");
+
+            default:
+                return false;
+        }
+    });
+}
 
         List<Attraction> attractions =
                 attractionRepository.findByCity(request.getCity());
@@ -164,9 +221,14 @@ if (request.getTransport() != null && !request.getTransport().isBlank()) {
         }
     });
 }
+     
+    System.out.println("Hotels: " + hotels.size());
+    System.out.println("Restaurants: " + restaurants.size());
+    System.out.println("Attractions: " + attractions.size());
+    System.out.println("Events: " + events.size());
 
-        // Surprise Me
-        if (request.isSurpriseMe()) {
+    // Surprise Me
+if (request.isSurpriseMe()) {
 
     Collections.shuffle(hotels);
     Collections.shuffle(restaurants);
@@ -177,22 +239,25 @@ if (request.getTransport() != null && !request.getTransport().isBlank()) {
         hotels = hotels.subList(0, 1);
     }
 
-    if (restaurants.size() > 1) {
-        restaurants = restaurants.subList(0, 1);
+    if (restaurants.size() > 2) {
+        restaurants = restaurants.subList(0, 2);
     }
 
     if (attractions.size() > 2) {
         attractions = attractions.subList(0, 2);
     }
 
-    if (events.size() > 1) {
-        events = events.subList(0, 1);
+    if (events.size() > 2) {
+        events = events.subList(0, 2);
     }
 }
+
+
+// Set response data
 response.setHotels(hotels);
 response.setRestaurants(restaurants);
 response.setAttractions(attractions);
-response.setEvents(events);
+response.setEvents(events);    
 
 return response;
 }
