@@ -7,10 +7,6 @@ function Login() {
 
     const navigate = useNavigate();
 
-    const handleGoogleLogin = () => {
-        alert("Google Login will be connected in the next step.");
-    };
-
     return (
         <>
             <Navbar />
@@ -52,12 +48,13 @@ function Login() {
                         </p>
 
 						<button
-						    onClick={() => {
-						        window.location.href = "http://localhost:8080/oauth2/authorization/google";
-						    }}
-						>
-						    Continue with Google
-						</button>
+                            className="google-btn"
+                            onClick={() => {
+                                window.location.href = "http://localhost:8080/oauth2/authorization/google";
+                            }}
+                        >
+                            Continue with Google
+                        </button>
 
                         <div className="divider">
                             <span>OR</span>

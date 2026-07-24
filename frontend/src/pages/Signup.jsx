@@ -7,10 +7,6 @@ function Signup() {
 
     const navigate = useNavigate();
 
-    const handleGoogleSignup = () => {
-        alert("Google Signup will be connected to the backend soon.");
-    };
-
     return (
         <>
             <Navbar />
@@ -53,7 +49,9 @@ function Signup() {
 
                         <button
                             className="google-btn"
-                            onClick={handleGoogleSignup}
+                            onClick={() => {
+                                window.location.href = "http://localhost:8080/oauth2/authorization/google";
+                            }}
                         >
                             Register with Google
                         </button>
