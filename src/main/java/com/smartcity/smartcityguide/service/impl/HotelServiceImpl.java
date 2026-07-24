@@ -35,9 +35,9 @@ public class HotelServiceImpl implements HotelService {
         existingHotel.setImageUrl(hotel.getImageUrl());
         existingHotel.setRating(hotel.getRating());
         existingHotel.setCategory(hotel.getCategory());
-       existingHotel.setPriceRange(hotel.getPriceRange());
-existingHotel.setBestFor(hotel.getBestFor());
-existingHotel.setAmenities(hotel.getAmenities());
+        existingHotel.setPriceRange(hotel.getPriceRange());
+        existingHotel.setBestFor(hotel.getBestFor());
+        existingHotel.setAmenities(hotel.getAmenities());
 
         return hotelRepository.save(existingHotel);
     }
@@ -86,12 +86,12 @@ existingHotel.setAmenities(hotel.getAmenities());
     }
 
     @Override
-public List<Hotel> getHotelsByCityAndPriceRange(String city, String priceRange) {
-    return hotelRepository.findByCityAndPriceRange(city, priceRange);
-}
+    public List<Hotel> getHotelsByCityAndPriceRange(String city, String priceRange) {
+        return hotelRepository.findByCityAndPriceRange(city, priceRange);
+    }
 
-@Override
-public List<Hotel> getHotelsByPriceRange(String priceRange) {
-    return hotelRepository.findByPriceRange(priceRange);
-}
+    @Override
+    public List<Hotel> getHotelsByPriceRange(String priceRange) {
+        return hotelRepository.findByPriceRange(priceRange);
+    }
 }
