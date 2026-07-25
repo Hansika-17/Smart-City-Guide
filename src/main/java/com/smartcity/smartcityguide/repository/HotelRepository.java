@@ -19,16 +19,16 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
     List<Hotel> findByPriceRange(String priceRange);
 
-List<Hotel> findByBestForContainingIgnoreCase(String bestFor);
+    List<Hotel> findByBestForContainingIgnoreCase(String bestFor);
 
-List<Hotel> findByCityAndPriceRange(String city, String priceRange);
+    List<Hotel> findByCityAndPriceRange(String city, String priceRange);
 
-List<Hotel> findByCityAndBestForContainingIgnoreCase(String city, String bestFor);
+    List<Hotel> findByCityAndBestForContainingIgnoreCase(String city, String bestFor);
 
-List<Hotel> findByCityAndPriceRangeAndBestForContainingIgnoreCase(
+    List<Hotel> findByCityAndPriceRangeAndBestForContainingIgnoreCase(
         String city,
         String priceRange,
         String bestFor
-);
+    );
 
 }

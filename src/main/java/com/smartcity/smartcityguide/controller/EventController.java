@@ -25,30 +25,26 @@ public class EventController {
     }
 
 
+    // Get events by city and/or category
+     @GetMapping
+     public List<Event> getEvents(
+        @RequestParam(required = false) String city,
+        @RequestParam(required = false) String category) {
 
-    // Get all events
-
-    @GetMapping
-    public List<Event> getAllEvents(){
-
-        return eventService.getAllEvents();
+    if (city != null && category != null) {
+        return eventService.getEventsByCityAndCategory(city, category);
     }
 
-    // Get events by city using query parameter
-    @GetMapping(params = "city")
-    public List<Event> getEventsByCityParam(
-              @RequestParam String city) {
-
-         return eventService.getEventsByCity(city);
+    if (city != null) {
+        return eventService.getEventsByCity(city);
     }
 
-   // Get events by category using query parameter
-   @GetMapping(params = "category")
-   public List<Event> getEventsByCategoryParam(
-            @RequestParam String category) {
-
+    if (category != null) {
         return eventService.getEventsByCategory(category);
     }
+
+    return eventService.getAllEvents();
+}
 
     // Get event by id
 

@@ -49,4 +49,9 @@ public List<Event> getEventsByCategory(String category) {
 
 }
 
+    @Override
+public List<Event> getEventsByCityAndCategory(String city, String category) {
+    return eventRepository.findByCityAndCategory(city, category);
+}
+
 }
