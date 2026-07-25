@@ -5,7 +5,12 @@ import com.smartcity.smartcityguide.dto.OtpRequest;
 import com.smartcity.smartcityguide.entity.User;
 import com.smartcity.smartcityguide.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
+import java.security.Principal;
+import java.util.Map;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @RestController
 @RequestMapping("/auth")
@@ -47,4 +52,19 @@ public class AuthController {
 
         return authService.resetPassword(email, otp, newPassword);
     }
+
+    @GetMapping("/me")
+        public Map<String, String> getCurrentUser(
+                @AuthenticationPrincipal OAuth2User oAuth2User) {
+
+            if (oAuth2User == null) {
+                return Map.of("authenticated", "false");
+            }
+
+            return Map.of(
+                    "authenticated", "true",
+                    "name", oAuth2User.getAttribute("name"),
+                    "email", oAuth2User.getAttribute("email")
+            );
+        }
 }

@@ -42,13 +42,17 @@ private CustomOAuth2UserService customOAuth2UserService;
     )
 
                 .oauth2Login(oauth -> oauth
-        .userInfoEndpoint(userInfo -> userInfo
-                .userService(customOAuth2UserService)
-        )
-        .defaultSuccessUrl("/success", true)
-)
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
+                        .defaultSuccessUrl("http://localhost:5173/", true)
+                        )
 
-                .formLogin(form -> form.disable());
+                        .logout(logout -> logout
+                        .logoutSuccessUrl("http://localhost:5173/")
+                        )
+
+                        .formLogin(form -> form.disable());
 
         return http.build();
     }
