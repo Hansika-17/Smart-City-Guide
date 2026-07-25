@@ -1,7 +1,24 @@
 import Navbar from "../components/Navbar";
 import "../styles/Events.css";
+import { useState, useEffect } from "react";
 
 function Events() {
+
+    const [events, setEvents] = useState([]);
+    const [search, setSearch] = useState("");
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+        useEffect(() => {
+            console.log("Selected Event Changed:", selectedEvent);
+        }, [selectedEvent]);
+
+        useEffect(() => {
+            fetch("http://localhost:8080/api/events")
+                .then((res) => res.json())
+                .then((data) => setEvents(data))
+                .catch((err) => console.error(err));
+        }, []);
+
     return (
         <>
             <Navbar />
@@ -21,44 +38,80 @@ function Events() {
                     <input
                         type="text"
                         placeholder="🔍 Search events..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
 
                 <div className="event-grid">
 
-                    <div className="event-card">
-                        <div className="event-image"></div>
+                    {events
+                        .filter((event) =>
+                            event.eventName.toLowerCase().includes(search.toLowerCase()) ||
+                            event.city.toLowerCase().includes(search.toLowerCase()) ||
+                            event.category.toLowerCase().includes(search.toLowerCase())
+                        )
+                        .map((event) => (
 
-                        <h2>Music Festival</h2>
+                        <div className="event-card" key={event.id}>
 
-                        <p>📅 25 July • Hyderabad</p>
+                            <img
+                                src={event.imageUrl}
+                                alt={event.eventName}
+                                className="event-image"
+                            />
 
-                        <button>View Details</button>
-                    </div>
+                            <h2>{event.eventName}</h2>
 
-                    <div className="event-card">
-                        <div className="event-image"></div>
+                            <p>📍 {event.city}</p>
 
-                        <h2>Food Carnival</h2>
+                            <p>📅 {event.timings}</p>
 
-                        <p>📅 2 August • Bengaluru</p>
+                            <button onClick={() => {
+                                console.log("clicked", event);
+                                setSelectedEvent(event);
+                            }}>
+                                View Details
+                            </button>
 
-                        <button>View Details</button>
-                    </div>
-
-                    <div className="event-card">
-                        <div className="event-image"></div>
-
-                        <h2>Art Exhibition</h2>
-
-                        <p>📅 10 August • Mumbai</p>
-
-                        <button>View Details</button>
-                    </div>
+                        </div>
+                    ))}
 
                 </div>
 
             </div>
+
+            {selectedEvent && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+
+                        <span
+                            className="close-btn"
+                            onClick={() => setSelectedEvent(null)}
+                        >
+                            ×
+                        </span>
+
+                        <img
+                            src={selectedEvent.imageUrl}
+                            alt={selectedEvent.eventName}
+                            className="modal-image"
+                        />
+
+                        <h2>{selectedEvent.eventName}</h2>
+
+                        <p><strong>📍 City:</strong> {selectedEvent.city}</p>
+                        <p><strong>🏛 Venue:</strong> {selectedEvent.venue}</p>
+                        <p><strong>🕒 Timings:</strong> {selectedEvent.timings}</p>
+                        <p><strong>🎟 Ticket:</strong> {selectedEvent.ticketPrice}</p>
+                        <p><strong>⭐ Best For:</strong> {selectedEvent.bestFor}</p>
+
+                        <p>{selectedEvent.description}</p>
+
+                    </div>
+                </div>
+            )}
+
         </>
     );
 }

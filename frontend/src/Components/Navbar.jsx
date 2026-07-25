@@ -96,7 +96,7 @@ function Navbar() {
                                 fontWeight: "600"
                             }}
                         >
-                            👤 {user.name}
+                             {user.name}
                         </span>
 
                         <a
