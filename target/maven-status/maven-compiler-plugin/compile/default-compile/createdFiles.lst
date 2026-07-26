@@ -15,7 +15,6 @@ com\smartcity\smartcityguide\service\AIService.class
 com\smartcity\smartcityguide\service\EventService.class
 com\smartcity\smartcityguide\SmartCityGuideApplication.class
 com\smartcity\smartcityguide\repository\RestaurantRepository.class
-com\smartcity\smartcityguide\service\impl\GroupRecommendationServiceImpl.class
 com\smartcity\smartcityguide\recommendation\enums\TravelPersona.class
 com\smartcity\smartcityguide\entity\Hotel.class
 com\smartcity\smartcityguide\service\impl\EventServiceImpl.class

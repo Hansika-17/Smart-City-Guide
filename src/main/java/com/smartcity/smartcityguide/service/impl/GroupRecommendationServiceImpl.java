@@ -7,9 +7,14 @@ import com.smartcity.smartcityguide.service.GroupRecommendationService;
 import org.springframework.stereotype.Service;
 import com.smartcity.smartcityguide.dto.RecommendationRequest;
 import com.smartcity.smartcityguide.dto.RecommendationResponse;
+import com.smartcity.smartcityguide.entity.Attraction;
+import com.smartcity.smartcityguide.entity.Hotel;
+import com.smartcity.smartcityguide.entity.Restaurant;
 import com.smartcity.smartcityguide.service.RecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +38,7 @@ public GroupRecommendationResponse getGroupRecommendation(GroupRecommendationReq
     int totalMembers = request.getMembers().size();
     int matchedPreferences = 0;
 
-    // Compare every member with the first member
+    // Compare every member with the group's common preferences
     String budget = findMostCommonBudget(request);
     String persona = findMostCommonPersona(request);
     String time = findMostCommonTime(request);
@@ -104,6 +109,32 @@ response.setEvents(recommendationResponse.getEvents());
 
     return response;
 }
+private String findMostCommon(Map<String, Integer> countMap) {
+
+    int max = countMap.values().stream()
+            .max(Integer::compareTo)
+            .orElse(0);
+
+    StringBuilder result = new StringBuilder();
+
+    for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
+
+        if (entry.getValue() == max) {
+
+            if (result.length() > 0) {
+                result.append(", ");
+            }
+
+            result.append(entry.getKey());
+        }
+    }
+
+    if (result.toString().contains(",")) {
+        return "Mixed (" + result + ")";
+    }
+
+    return result.toString();
+}
 
 private String findMostCommonBudget(GroupRecommendationRequest request) {
 
@@ -112,14 +143,11 @@ private String findMostCommonBudget(GroupRecommendationRequest request) {
     for (GroupMemberRequest member : request.getMembers()) {
         countMap.put(
                 member.getPriceRange(),
-                countMap.getOrDefault(member.getPriceRange(), 0) + 1);
+                countMap.getOrDefault(member.getPriceRange(), 0) + 1
+        );
     }
 
-    return countMap.entrySet()
-            .stream()
-            .max(Map.Entry.comparingByValue())
-            .get()
-            .getKey();
+    return findMostCommon(countMap);
 }
 
 private String findMostCommonPersona(GroupRecommendationRequest request) {
@@ -132,11 +160,7 @@ private String findMostCommonPersona(GroupRecommendationRequest request) {
                 countMap.getOrDefault(member.getBestFor(), 0) + 1);
     }
 
-    return countMap.entrySet()
-            .stream()
-            .max(Map.Entry.comparingByValue())
-            .get()
-            .getKey();
+    return findMostCommon(countMap);
 }
 
 private String findMostCommonTime(GroupRecommendationRequest request) {
@@ -149,11 +173,7 @@ private String findMostCommonTime(GroupRecommendationRequest request) {
                 countMap.getOrDefault(member.getTimeAvailable(), 0) + 1);
     }
 
-    return countMap.entrySet()
-            .stream()
-            .max(Map.Entry.comparingByValue())
-            .get()
-            .getKey();
+    return findMostCommon(countMap);
 }
 
 private String findMostCommonTransport(GroupRecommendationRequest request) {
@@ -166,11 +186,7 @@ private String findMostCommonTransport(GroupRecommendationRequest request) {
                 countMap.getOrDefault(member.getTransport(), 0) + 1);
     }
 
-    return countMap.entrySet()
-            .stream()
-            .max(Map.Entry.comparingByValue())
-            .get()
-            .getKey();
+    return findMostCommon(countMap);
 }
 
 }
