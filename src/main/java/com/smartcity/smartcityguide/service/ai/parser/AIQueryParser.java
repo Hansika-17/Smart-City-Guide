@@ -26,25 +26,32 @@ public class AIQueryParser {
 
     public static String extractBudget(String message) {
 
-        message = message.toLowerCase();
+    message = message.toLowerCase();
 
-        if (message.contains("budget")
-                || message.contains("cheap")
-                || message.contains("affordable")
-                || message.contains("low cost")) {
+    if (message.contains("budget")
+            || message.contains("cheap")
+            || message.contains("affordable")
+            || message.contains("low cost")) {
 
-            return "Budget";
-        }
-
-        if (message.contains("luxury")
-                || message.contains("premium")
-                || message.contains("expensive")) {
-
-            return "Luxury";
-        }
-
-        return null;
+        return "Budget";
     }
+
+    if (message.contains("mid-range")
+            || message.contains("mid range")
+            || message.contains("moderate")) {
+
+        return "Mid-range";
+    }
+
+    if (message.contains("luxury")
+            || message.contains("premium")
+            || message.contains("expensive")) {
+
+        return "Premium";
+    }
+
+    return null;
+}
 
     public static String extractBestFor(String message) {
 
@@ -77,4 +84,34 @@ public class AIQueryParser {
 
         return null;
     }
+    public static String extractEventCategory(String message) {
+
+    message = message.toLowerCase();
+
+    if (message.contains("concert") || message.contains("music")) {
+        return "Concert";
+    }
+
+    if (message.contains("food festival") || message.contains("festival")) {
+        return "Food Festival";
+    }
+
+    if (message.contains("exhibition")) {
+        return "Exhibition";
+    }
+
+    if (message.contains("sports") || message.contains("marathon")) {
+        return "Sports";
+    }
+
+    if (message.contains("cultural")) {
+        return "Cultural";
+    }
+
+    if (message.contains("entertainment")) {
+        return "Entertainment";
+    }
+
+    return null;
+} 
 }
