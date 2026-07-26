@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import "../styles/Restaurants.css";
+import restaurantPlaceholder from "../assets/restaurant_placeholder.jpg";
 
 function Restaurants() {
 	
@@ -49,11 +50,15 @@ function Restaurants() {
 				        <div className="restaurant-card" key={restaurant.id}>
 
 				            <div className="restaurant-image">
-				                <img
-				                    src={restaurant.imageUrl}
-				                    alt={restaurant.restaurantName}
-				                />
-				            </div>
+								<img
+									src={restaurant.imageUrl}
+									alt={restaurant.restaurantName}
+									onError={(e) => {
+										e.currentTarget.onerror = null;
+										e.currentTarget.src = restaurantPlaceholder;
+									}}
+								/>
+							</div>
 
 				            <h2>{restaurant.restaurantName}</h2>
 

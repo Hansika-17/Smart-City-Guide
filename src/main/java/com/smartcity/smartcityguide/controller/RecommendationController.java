@@ -24,4 +24,5 @@ public class RecommendationController {
 
         return ResponseEntity.ok(response);
     }
+
 }

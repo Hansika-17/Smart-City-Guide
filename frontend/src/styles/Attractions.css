@@ -49,7 +49,7 @@
 
 .attraction-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
     gap:30px;
 }
 
@@ -58,7 +58,7 @@
     border-radius:22px;
     overflow:hidden;
     box-shadow:0 12px 28px rgba(94,58,114,.12);
-    transition:.35s ease;
+    transition:transform .35s ease, box-shadow .35s ease;
 }
 
 .attraction-card:hover{
@@ -67,23 +67,32 @@
 }
 
 .attraction-image{
+    width:100%;
     height:220px;
-    background:linear-gradient(135deg,#8A6AAC,#DCC9A8);
+    object-fit:cover;
+    display:block;
+    transition:transform .4s ease;
+}
+
+.attraction-card:hover .attraction-image{
+    transform:scale(1.05);
 }
 
 .attraction-card h2{
-    margin:20px;
+    margin:22px 20px 12px;
     color:#5E3A72;
+    font-size:1.5rem;
 }
 
 .attraction-card p{
-    margin:0 20px 20px;
+    margin:0 20px 22px;
     color:#6F6275;
+    font-size:16px;
 }
 
 .attraction-card button{
-    margin:0 20px 25px;
-    padding:12px 22px;
+    margin:0 20px 28px;
+    padding:13px 26px;
     border:none;
     border-radius:50px;
     background:#D9B86C;

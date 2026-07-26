@@ -1,7 +1,24 @@
 import Navbar from "../components/Navbar";
 import "../styles/Attractions.css";
+import { useState, useEffect } from "react";
+import attractionPlaceholder from "../assets/attractions_placeholder.jpeg";
 
 function Attractions() {
+
+    const [attractions, setAttractions] = useState([]);
+    const [search, setSearch] = useState("");
+    const [selectedAttraction, setSelectedAttraction] = useState(null);
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/attractions")
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data[0]);
+                setAttractions(data);
+            })
+            .catch((err) => console.error(err));
+    }, []);
+
     return (
         <>
             <Navbar />
@@ -21,46 +38,103 @@ function Attractions() {
                     <input
                         type="text"
                         placeholder="🔍 Search attractions..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
 
                 <div className="attraction-grid">
 
-                    <div className="attraction-card">
-                        <div className="attraction-image"></div>
+                    {attractions
+                        .filter((attraction) =>
+                            attraction.attractionName.toLowerCase().includes(search.toLowerCase()) ||
+                            attraction.city.toLowerCase().includes(search.toLowerCase()) ||
+                            attraction.category.toLowerCase().includes(search.toLowerCase())
+                        )
+                        .map((attraction) => (
 
-                        <h2>Charminar</h2>
+                        <div className="attraction-card" key={attraction.id}>
 
-                        <p>⭐ 4.8 • Hyderabad</p>
+                            <img
+                                src={attraction.imageUrl}
+                                alt={attraction.attractionName}
+                                className="modal-image"
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = attractionPlaceholder;
+                                }}
+                            />
 
-                        <button>View Details</button>
+                            <h2>{attraction.attractionName}</h2>
+
+                            <p>
+                                ⭐ {attraction.rating} • {attraction.city}
+                            </p>
+
+                            <button onClick={() => setSelectedAttraction(attraction)}>
+                                View Details
+                            </button>
+
+                        </div>
+
+                    ))}
                     </div>
 
-                    <div className="attraction-card">
-                        <div className="attraction-image"></div>
+{selectedAttraction && (
+    <div className="modal-overlay">
 
-                        <h2>Gateway of India</h2>
+        <div className="modal-content">
 
-                        <p>⭐ 4.7 • Mumbai</p>
+            <span
+                className="close-btn"
+                onClick={() => setSelectedAttraction(null)}
+            >
+                ×
+            </span>
 
-                        <button>View Details</button>
-                    </div>
+            <img
+                src={selectedAttraction.imageUrl}
+                alt={selectedAttraction.attractionName}
+                className="modal-image"
+                onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = attractionPlaceholder;
+                }}
+            />
 
-                    <div className="attraction-card">
-                        <div className="attraction-image"></div>
+            <h2>{selectedAttraction.attractionName}</h2>
 
-                        <h2>Mysore Palace</h2>
+            <p>
+                <strong>📍 City:</strong> {selectedAttraction.city}
+            </p>
 
-                        <p>⭐ 4.9 • Mysuru</p>
+            <p>
+                <strong>🏛 Address:</strong> {selectedAttraction.address}
+            </p>
 
-                        <button>View Details</button>
-                    </div>
+            <p>
+                <strong>💰 Entry Fee:</strong> {selectedAttraction.entryFee}
+            </p>
 
-                </div>
+            <p>
+                <strong>⏱ Time Required:</strong> {selectedAttraction.timeRequired}
+            </p>
 
-            </div>
-        </>
-    );
+            <p>
+                <strong>⭐ Best For:</strong> {selectedAttraction.bestFor}
+            </p>
+
+            <p>
+                {selectedAttraction.description}
+            </p>
+
+        </div>
+
+    </div>
+)}
+                                </div>
+                            </>
+                        );
 }
 
 export default Attractions;
