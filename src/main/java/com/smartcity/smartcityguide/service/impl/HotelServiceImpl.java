@@ -94,4 +94,26 @@ public class HotelServiceImpl implements HotelService {
     public List<Hotel> getHotelsByPriceRange(String priceRange) {
         return hotelRepository.findByPriceRange(priceRange);
     }
+    @Override
+public List<Hotel> getHotelsByBestFor(String bestFor) {
+    return hotelRepository.findByBestForContainingIgnoreCase(bestFor);
+}
+
+@Override
+public List<Hotel> getHotelsByCityAndBestFor(String city, String bestFor) {
+    return hotelRepository.findByCityAndBestForContainingIgnoreCase(city, bestFor);
+}
+
+@Override
+public List<Hotel> getHotelsByCityAndPriceRangeAndBestFor(
+        String city,
+        String priceRange,
+        String bestFor) {
+
+    return hotelRepository.findByCityAndPriceRangeAndBestForContainingIgnoreCase(
+            city,
+            priceRange,
+            bestFor
+    );
+}
 }

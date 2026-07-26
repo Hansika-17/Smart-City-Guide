@@ -92,4 +92,26 @@ public List<Restaurant> getRestaurantsByCityAndPriceRange(String city, String pr
 public List<Restaurant> getRestaurantsByPriceRange(String priceRange) {
     return restaurantRepository.findByPriceRange(priceRange);
 }
+@Override
+public List<Restaurant> getRestaurantsByBestFor(String bestFor) {
+    return restaurantRepository.findByBestForContainingIgnoreCase(bestFor);
+}
+
+@Override
+public List<Restaurant> getRestaurantsByCityAndBestFor(String city, String bestFor) {
+    return restaurantRepository.findByCityAndBestForContainingIgnoreCase(city, bestFor);
+}
+
+@Override
+public List<Restaurant> getRestaurantsByCityAndPriceRangeAndBestFor(
+        String city,
+        String priceRange,
+        String bestFor) {
+
+    return restaurantRepository.findByCityAndPriceRangeAndBestForContainingIgnoreCase(
+            city,
+            priceRange,
+            bestFor
+    );
+}
 }

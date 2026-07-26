@@ -27,4 +27,14 @@ public interface RestaurantService {
     List<Restaurant> getRestaurantsByCityAndPriceRange(String city, String priceRange);
 
     List<Restaurant> getRestaurantsByPriceRange(String priceRange);
+
+    List<Restaurant> getRestaurantsByBestFor(String bestFor);
+
+List<Restaurant> getRestaurantsByCityAndBestFor(String city, String bestFor);
+
+List<Restaurant> getRestaurantsByCityAndPriceRangeAndBestFor(
+        String city,
+        String priceRange,
+        String bestFor
+);
 }
