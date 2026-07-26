@@ -17,14 +17,82 @@ function RecommendationWizard() {
         transport: ""
     });
     const [groupResult, setGroupResult] = useState(null);
+    const [recommendationResult, setRecommendationResult] = useState(null);
     const [activeTab, setActiveTab] = useState("hotels");
+    const result = groupResult || recommendationResult;
+    const [surpriseMode, setSurpriseMode] = useState(false);
+
+    const getSurpriseRecommendations = () => {
+
+    const payload = {
+
+        city: city,
+
+        priceRange:
+            travelType === "solo"
+                ? memberData.budget
+                : members[0]?.budget,
+
+        bestFor:
+            travelType === "solo"
+                ? memberData.persona
+                : members[0]?.persona,
+
+        timeAvailable:
+            travelType === "solo"
+                ? memberData.timeAvailable
+                : members[0]?.timeAvailable,
+
+        transport:
+            travelType === "solo"
+                ? memberData.transport
+                : members[0]?.transport,
+
+        surpriseMe: true
+    };
+
+
+    fetch("http://localhost:8080/api/recommendations", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(payload)
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        console.log("SURPRISE RESULT:", data);
+
+        setGroupResult(data);
+
+        setSurpriseMode(true);
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Error fetching surprise recommendations:",
+            error
+        );
+
+    });
+
+};
     
 
     return (
         <div className={`wizard-card ${step === 6 ? "recommendation-page" : ""}`}>
 
             <div className="wizard-step">
-                Step {step} of 6
+                Step {step} of {travelType === "solo" ? 3 : 6}
             </div>
 
             {step === 1 && (
@@ -106,14 +174,130 @@ function RecommendationWizard() {
             {step === 3 && (
                 <>
                     {travelType === "solo" ? (
-                        <>
-                            <h2>What's your budget?</h2>
+    <>
+        <h2>Create Your Trip</h2>
 
-                            <p style={{ color: "#555" }}>
-                                Budget options coming next...
-                            </p>
-                        </>
-                    ) : (
+        <select
+            value={memberData.budget}
+            onChange={(e) =>
+                setMemberData({
+                    ...memberData,
+                    budget: e.target.value
+                })
+            }
+        >
+            <option value="">Select Budget</option>
+            <option value="budget">Budget</option>
+            <option value="mid-range">Mid Range</option>
+            <option value="luxury">Luxury</option>
+        </select>
+
+
+        <select
+            value={memberData.persona}
+            onChange={(e) =>
+                setMemberData({
+                    ...memberData,
+                    persona: e.target.value
+                })
+            }
+        >
+            <option value="">Select Persona</option>
+            <option value="Student">Student</option>
+            <option value="Foodie">Foodie</option>
+            <option value="Influencer">Influencer</option>
+            <option value="History Lover">History Lover</option>
+            <option value="Nature Explorer">Nature Explorer</option>
+            <option value="Business Traveller">Business Traveller</option>
+        </select>
+
+
+        <select
+            value={memberData.timeAvailable}
+            onChange={(e) =>
+                setMemberData({
+                    ...memberData,
+                    timeAvailable: e.target.value
+                })
+            }
+        >
+            <option value="">Select Time Available</option>
+            <option value="1 hour">1 Hour</option>
+            <option value="1-2 hours">1-2 Hours</option>
+            <option value="2 hours">2 Hours</option>
+            <option value="2-3 hours">2-3 Hours</option>
+            <option value="3 hours">3 Hours</option>
+            <option value="3-4 hours">3-4 Hours</option>
+            <option value="4-5 hours">4-5 Hours</option>
+            <option value="half day">Half Day</option>
+            <option value="full day">Full Day</option>
+        </select>
+
+
+        <select
+            value={memberData.transport}
+            onChange={(e) =>
+                setMemberData({
+                    ...memberData,
+                    transport: e.target.value
+                })
+            }
+        >
+            <option value="">Select Transport</option>
+            <option value="walking">Walking</option>
+            <option value="bike">Bike</option>
+            <option value="car">Car</option>
+        </select>
+
+
+        <button
+            onClick={() => {
+
+                if (
+                    memberData.budget === "" ||
+                    memberData.persona === "" ||
+                    memberData.timeAvailable === "" ||
+                    memberData.transport === ""
+                ) {
+                    alert("Please complete all preferences before continuing.");
+                    return;
+                }
+
+
+                const soloPayload = {
+                    city: city,
+                    priceRange: memberData.budget,
+                    bestFor: memberData.persona,
+                    timeAvailable: memberData.timeAvailable,
+                    transport: memberData.transport,
+                    surpriseMe: false
+                };
+
+
+                fetch("http://localhost:8080/api/recommendations", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(soloPayload)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("SOLO RESULT:", data);
+                    setRecommendationResult(data);
+                    setStep(6);
+                })
+                .catch(error => {
+                    console.error("Error fetching solo recommendations:", error);
+                });
+
+            }}
+        >
+            Generate Recommendations →
+        </button>
+
+    </>
+) : (
                         <>
                             <h2>How many people are travelling?</h2>
 
@@ -374,10 +558,16 @@ function RecommendationWizard() {
                 </div>
             )}
 
-            {step === 6 && groupResult && (
+            {step === 6 && (groupResult || recommendationResult) && (
     <div className="recommendation-result">
 
-        <h2>Your Group Recommendations</h2>
+        <h2>
+    {surpriseMode
+        ? "✨ Surprise Picks For You"
+        : travelType === "group"
+            ? "Your Group Recommendations"
+            : "Your Personalized Recommendations"}
+</h2>
 
         <div className="recommendation-tabs">
 
@@ -419,7 +609,7 @@ function RecommendationWizard() {
 
                 <h3>Hotels</h3>
 
-                {groupResult.hotels.length === 0 ? (
+                {result.hotels.length === 0 ? (
 
                     <p>No hotels found matching your preferences.</p>
 
@@ -427,7 +617,7 @@ function RecommendationWizard() {
 
                     <div className="recommendation-grid">
 
-                        {groupResult.hotels.map((hotel) => (
+                        {result.hotels.map((hotel) => (
 
                             <div className="recommendation-card" key={hotel.id}>
 
@@ -493,7 +683,7 @@ function RecommendationWizard() {
 
         <h3>Restaurants</h3>
 
-        {groupResult.restaurants.length === 0 ? (
+        {result.restaurants.length === 0 ? (
 
             <p>No restaurants found matching your preferences.</p>
 
@@ -501,7 +691,7 @@ function RecommendationWizard() {
 
             <div className="recommendation-grid">
 
-                {groupResult.restaurants.map((restaurant) => (
+                {result.restaurants.map((restaurant) => (
 
                     <div
                         className="recommendation-card"
@@ -580,7 +770,7 @@ function RecommendationWizard() {
 
         <h3>Attractions</h3>
 
-        {groupResult.attractions.length === 0 ? (
+        {result.attractions.length === 0 ? (
 
             <p>No attractions found matching your preferences.</p>
 
@@ -588,7 +778,7 @@ function RecommendationWizard() {
 
             <div className="recommendation-grid">
 
-                {groupResult.attractions.map((attraction) => (
+                {result.attractions.map((attraction) => (
 
                     <div
                         className="recommendation-card"
@@ -667,7 +857,7 @@ function RecommendationWizard() {
 
         <h3>Events</h3>
 
-        {groupResult.events.length === 0 ? (
+        {result.events.length === 0 ? (
 
             <p>No events found matching your preferences.</p>
 
@@ -675,7 +865,7 @@ function RecommendationWizard() {
 
             <div className="recommendation-grid">
 
-                {groupResult.events.map((event) => (
+                {result.events.map((event) => (
 
                     <div
                         className="recommendation-card"
@@ -726,6 +916,15 @@ function RecommendationWizard() {
                     </div>
 
                 ))}
+
+                {travelType === "solo" && (
+    <button
+        className="recommendation-button"
+        onClick={getSurpriseRecommendations}
+    >
+        ✨ Surprise Me
+    </button>
+)}
 
             </div>
 
