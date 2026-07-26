@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.smartcity.smartcityguide.entity.Restaurant;
 import com.smartcity.smartcityguide.service.ai.GeminiService;
 import java.util.List;
-
+import com.smartcity.smartcityguide.service.ai.parser.AIQueryParser;
 @Service
 public class AIServiceImpl implements AIService {
 
@@ -38,19 +38,15 @@ public class AIServiceImpl implements AIService {
         return geminiService.askGemini(message);
     }
 
-    private String handleHotelQuery(String message) {
+private String handleHotelQuery(String message) {
 
     List<Hotel> hotels;
 
-    if (message.contains("in ")) {
+    String city = AIQueryParser.extractCity(message);
 
-    	String city = message.substring(message.indexOf("in") + 2).trim();
+    if (city != null) {
 
-    	city = city.replaceAll("[^a-zA-Z ]", "").trim();
-
-    	city = city.substring(0, 1).toUpperCase() + city.substring(1);
-
-    	hotels = hotelService.getHotelsByCity(city);
+        hotels = hotelService.getHotelsByCity(city);
 
     } else {
 
@@ -75,39 +71,35 @@ public class AIServiceImpl implements AIService {
 }
     private String handleRestaurantQuery(String message) {
 
-        List<Restaurant> restaurants;
+    List<Restaurant> restaurants;
 
-        if (message.contains("in ")) {
+    String city = AIQueryParser.extractCity(message);
 
-            String city = message.substring(message.indexOf("in") + 2).trim();
+    if (city != null) {
 
-            city = city.replaceAll("[^a-zA-Z ]", "").trim();
+        restaurants = restaurantService.getRestaurantsByCity(city);
 
-            city = city.substring(0, 1).toUpperCase() + city.substring(1);
+    } else {
 
-            restaurants = restaurantService.getRestaurantsByCity(city);
+        restaurants = restaurantService.getAllRestaurants();
 
-        } else {
-
-            restaurants = restaurantService.getAllRestaurants();
-
-        }
-
-        if (restaurants.isEmpty()) {
-            return "No restaurants found.";
-        }
-
-        StringBuilder response = new StringBuilder("🍽️ Restaurants Available:\n\n");
-
-        for (Restaurant restaurant : restaurants) {
-            response.append("• ")
-                    .append(restaurant.getRestaurantName())
-                    .append(" (⭐ ")
-                    .append(restaurant.getRating())
-                    .append(")\n");
-        }
-
-        return response.toString();
     }
+
+    if (restaurants.isEmpty()) {
+        return "No restaurants found.";
+    }
+
+    StringBuilder response = new StringBuilder("🍽️ Restaurants Available:\n\n");
+
+    for (Restaurant restaurant : restaurants) {
+        response.append("• ")
+                .append(restaurant.getRestaurantName())
+                .append(" (⭐ ")
+                .append(restaurant.getRating())
+                .append(")\n");
+    }
+
+    return response.toString();
+}
 
 }
