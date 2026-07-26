@@ -15,7 +15,9 @@ import com.smartcity.smartcityguide.repository.AttractionRepository;
 import com.smartcity.smartcityguide.repository.EventRepository;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
@@ -39,210 +41,134 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         List<Hotel> hotels =
             hotelRepository.findByCity(request.getCity());
-            // Filter hotels based on selected budget
-if (request.getPriceRange() != null && !request.getPriceRange().isBlank()) {
+        Map<Hotel,Integer> hotelScores = new HashMap<>();
 
-    String budget = request.getPriceRange().toLowerCase();
+for(Hotel hotel : hotels){
 
-    hotels.removeIf(hotel -> {
 
-        if (hotel.getPriceRange() == null) {
-            return true;
-        }
+    int score = 0;
 
-        String price = hotel.getPriceRange().toLowerCase();
+    score += calculatePersonaScore(
+            hotel.getBestFor(),
+            request.getBestFor());
 
-        switch (budget) {
+    score += calculateBudgetScore(
+            hotel.getPriceRange(),
+            request.getPriceRange());
 
-    case "budget":
-        // No budget hotels in DB, so recommend Premium hotels
-        return !price.contains("premium");
+    score += calculateRatingScore(
+            hotel.getRating());
 
-    case "mid-range":
-        // Recommend Premium and Luxury
-        return !(price.contains("premium") || price.contains("luxury"));
 
-    case "luxury":
-        // Only Luxury hotels
-        return !price.contains("luxury");
+    hotelScores.put(hotel,score);
 
-    default:
-        return false;
-}
-    });
-}
+} 
+hotels.sort((h1,h2)->
+    Integer.compare(hotelScores.get(h2),hotelScores.get(h1)));
 
-        List<Restaurant> restaurants =
+    List<Restaurant> restaurants =
             restaurantRepository.findByCity(request.getCity());
-            // Filter restaurants based on selected budget
-if (request.getPriceRange() != null && !request.getPriceRange().isBlank()) {
+    Map<Restaurant,Integer> restaurantScores=new HashMap<>();
 
-    String budget = request.getPriceRange().toLowerCase();
+for(Restaurant restaurant:restaurants){
 
-    restaurants.removeIf(restaurant -> {
+    int score=0;
 
-        if (restaurant.getPriceRange() == null) {
-            return true;
-        }
+    score+=calculatePersonaScore(
+        restaurant.getBestFor(),
+        request.getBestFor());
 
-        String price = restaurant.getPriceRange().toLowerCase();
+    score+=calculateBudgetScore(
+        restaurant.getPriceRange(),
+        request.getPriceRange());
 
-        switch (budget) {
+    score += calculateRatingScore(
+        restaurant.getRating());    
 
-            case "budget":
-                return price.contains("premium");
+    restaurantScores.put(restaurant,score);
 
-            case "mid-range":
-                return false;
-
-            case "luxury":
-                return !price.contains("premium");
-
-            default:
-                return false;
-        }
-    });
 }
 
-        List<Attraction> attractions =
+restaurants.sort((r1,r2)->
+    Integer.compare(restaurantScores.get(r2),restaurantScores.get(r1)));    
+        
+    List<Attraction> attractions =
                 attractionRepository.findByCity(request.getCity());
+    Map<Attraction,Integer> attractionScores=new HashMap<>();
+
+for(Attraction attraction:attractions){
+
+    int score=0;
+
+    score+=calculatePersonaScore(
+        attraction.getBestFor(),
+        request.getBestFor());
+
+    score+=calculateTimeScore(
+        attraction.getTimeRequired(),
+        request.getTimeAvailable());
+
+    score+=calculateTransportScore(
+        attraction.getTimeRequired(),
+        request.getTransport());
+
+    score += calculateRatingScore(attraction.getRating()); 
+    
+
+    attractionScores.put(attraction,score);
+
+}
+
+attractions.sort((a1,a2)->
+Integer.compare(attractionScores.get(a2),attractionScores.get(a1)));        
 
         List<Event> events =
                 eventRepository.findByCity(request.getCity());
+        Map<Event,Integer> eventScores=new HashMap<>();
 
+for(Event event:events){
 
-        // Filter using bestFor
-if (request.getBestFor() != null && !request.getBestFor().isBlank()) {
+    int score=0;
 
-    hotels.removeIf(hotel ->
-            !matchesBestFor(hotel.getBestFor(), request.getBestFor()));
+    score+=calculatePersonaScore(
+        event.getBestFor(),
+        request.getBestFor());
 
-    restaurants.removeIf(restaurant ->
-            !matchesBestFor(restaurant.getBestFor(), request.getBestFor()));
+    eventScores.put(event,score);
 
-    attractions.removeIf(attraction ->
-            !matchesBestFor(attraction.getBestFor(), request.getBestFor()));
-
-    events.removeIf(event ->
-            !matchesBestFor(event.getBestFor(), request.getBestFor()));
 }
 
-
-// Filter using timeAvailable
-if (request.getTimeAvailable() != null && !request.getTimeAvailable().isBlank()) {
-
-    String userTime = request.getTimeAvailable().toLowerCase();
-
-    attractions.removeIf(attraction -> {
-
-        if (attraction.getTimeRequired() == null) {
-            return true;
-        }
-
-        String attractionTime = attraction.getTimeRequired().toLowerCase();
-
-        switch (userTime) {
-
-            case "1 hour":
-                return !(attractionTime.equals("1 hour"));
-
-            case "1-2 hours":
-                return !(attractionTime.equals("1 hour")
-                        || attractionTime.equals("1-2 hours"));
-
-            case "2 hours":
-                return !(attractionTime.equals("1 hour")
-                        || attractionTime.equals("1-2 hours")
-                        || attractionTime.equals("2 hours"));
-
-            case "2-3 hours":
-                return !(attractionTime.equals("1 hour")
-                        || attractionTime.equals("1-2 hours")
-                        || attractionTime.equals("2 hours")
-                        || attractionTime.equals("2-3 hours"));
-
-            case "3 hours":
-                return !(attractionTime.equals("3 hours"));
-
-            case "3-4 hours":
-                return !(attractionTime.equals("3 hours")
-                        || attractionTime.equals("3-4 hours"));
-
-            case "4-5 hours":
-                return !(attractionTime.equals("4-5 hours"));
-
-            case "half day":
-                return attractionTime.equals("full day");
-
-            case "full day":
-                return false;
-
-            default:
-                return false;
-        }
-    });
-}
-
-// Filter using transport
-if (request.getTransport() != null && !request.getTransport().isBlank()) {
-
-    String transport = request.getTransport().toLowerCase();
-
-    attractions.removeIf(attraction -> {
-
-        if (attraction.getTimeRequired() == null) {
-            return true;
-        }
-
-        String attractionTime = attraction.getTimeRequired().toLowerCase();
-
-        switch (transport) {
-
-            case "walking":
-                return attractionTime.contains("3")
-                        || attractionTime.contains("4")
-                        || attractionTime.contains("full");
-
-            case "bike":
-                return attractionTime.contains("full");
-
-            case "car":
-                return false;
-
-            default:
-                return false;
-        }
-    });
-}
-     
-    System.out.println("Hotels: " + hotels.size());
-    System.out.println("Restaurants: " + restaurants.size());
-    System.out.println("Attractions: " + attractions.size());
-    System.out.println("Events: " + events.size());
+events.sort((e1,e2)->
+Integer.compare(eventScores.get(e2),eventScores.get(e1)));        
 
     // Surprise Me
 if (request.isSurpriseMe()) {
 
-    Collections.shuffle(hotels);
-    Collections.shuffle(restaurants);
-    Collections.shuffle(attractions);
-    Collections.shuffle(events);
+    // Hotels
+    List<Hotel> topHotels = hotels.subList(0, Math.min(5, hotels.size()));
+    Collections.shuffle(topHotels);
+    hotels = topHotels.subList(0, Math.min(1, topHotels.size()));
 
-    if (hotels.size() > 1) {
-        hotels = hotels.subList(0, 1);
-    }
+    // Restaurants
+    List<Restaurant> topRestaurants =
+            restaurants.subList(0, Math.min(5, restaurants.size()));
+    Collections.shuffle(topRestaurants);
+    restaurants =
+            topRestaurants.subList(0, Math.min(2, topRestaurants.size()));
 
-    if (restaurants.size() > 2) {
-        restaurants = restaurants.subList(0, 2);
-    }
+    // Attractions
+    List<Attraction> topAttractions =
+            attractions.subList(0, Math.min(5, attractions.size()));
+    Collections.shuffle(topAttractions);
+    attractions =
+            topAttractions.subList(0, Math.min(2, topAttractions.size()));
 
-    if (attractions.size() > 2) {
-        attractions = attractions.subList(0, 2);
-    }
-
-    if (events.size() > 2) {
-        events = events.subList(0, 2);
-    }
+    // Events
+    List<Event> topEvents =
+            events.subList(0, Math.min(5, events.size()));
+    Collections.shuffle(topEvents);
+    events =
+            topEvents.subList(0, Math.min(2, topEvents.size()));
 }
 
 
@@ -266,13 +192,14 @@ private List<String> getPersonaKeywords(String persona) {
     switch (persona.toLowerCase()) {
 
         case "foodie":
-            return List.of(
-                    "foodie",
-                    "food",
-                    "local cuisine",
-                    "restaurant",
-                    "street food"
-            );
+           return List.of(
+            "foodie",
+            "food",
+            "local cuisine",
+            "restaurant",
+            "street food",
+            "fine dining"
+           );
 
         case "history lover":
             return List.of(
@@ -284,19 +211,22 @@ private List<String> getPersonaKeywords(String persona) {
             );
 
         case "influencer":
-            return List.of(
-                    "photography",
-                    "influencer",
-                    "instagram",
-                    "scenic"
-            );
+           return List.of(
+            "photography",
+            "photo",
+            "instagram",
+            "influencer",
+            "scenic"
+          );
 
         case "nature explorer":
             return List.of(
-                    "nature",
-                    "park",
-                    "lake",
-                    "wildlife"
+            "nature",
+            "park",
+            "lake",
+            "wildlife",
+            "relaxation",
+            "adventure"
             );
 
         case "business traveller":
@@ -306,9 +236,11 @@ private List<String> getPersonaKeywords(String persona) {
             );
 
         case "student":
-            return List.of(
-                    "student"
-            );
+           return List.of(
+            "student",
+            "students",
+            "college"
+           );
 
         case "family":
             return List.of(
@@ -345,6 +277,216 @@ private boolean matchesBestFor(String databaseValue, String selectedPersona) {
     }
 
     return false;
+}
+
+private int calculatePersonaScore(String databaseValue, String selectedPersona) {
+
+    if (matchesBestFor(databaseValue, selectedPersona)) {
+        return 40;
+    }
+
+    return 0;
+}
+
+private int calculateBudgetScore(String itemBudget, String userBudget) {
+
+    if (itemBudget == null || userBudget == null
+            || userBudget.isBlank()) {
+        return 0;
+    }
+
+    itemBudget = itemBudget.toLowerCase();
+    userBudget = userBudget.toLowerCase();
+
+    switch (userBudget) {
+
+        case "budget":
+
+    if (itemBudget.contains("budget"))
+        return 20;
+
+    if (itemBudget.contains("mid"))
+        return 15;
+
+    if (itemBudget.contains("premium"))
+        return 10;
+
+    if (itemBudget.contains("luxury"))
+        return 5;
+
+    break;
+
+        case "mid-range":
+
+    if (itemBudget.contains("mid"))
+        return 20;
+
+    if (itemBudget.contains("premium"))
+        return 18;
+
+    if (itemBudget.contains("luxury"))
+        return 12;
+
+    break;
+
+        case "luxury":
+
+    if (itemBudget.contains("luxury"))
+        return 20;
+
+    if (itemBudget.contains("premium"))
+        return 15;
+
+    if (itemBudget.contains("mid"))
+        return 8;
+
+    break;
+    }
+
+    return 0;
+}
+
+private int calculateTimeScore(String attractionTime, String userTime) {
+
+    if (attractionTime == null || userTime == null
+            || userTime.isBlank()) {
+        return 0;
+    }
+
+    attractionTime = attractionTime.toLowerCase();
+    userTime = userTime.toLowerCase();
+
+    switch (userTime) {
+
+        case "1 hour":
+
+            if (attractionTime.equals("1 hour"))
+                return 20;
+
+            if (attractionTime.equals("1-2 hours"))
+                return 15;
+
+            break;
+
+        case "1-2 hours":
+
+            if (attractionTime.equals("1-2 hours"))
+                return 20;
+
+            if (attractionTime.equals("1 hour")
+                    || attractionTime.equals("2 hours"))
+                return 15;
+
+            break;
+
+        case "2 hours":
+
+            if (attractionTime.equals("2 hours"))
+                return 20;
+
+            if (attractionTime.equals("1-2 hours"))
+                return 18;
+
+            if (attractionTime.equals("2-3 hours"))
+                return 15;
+
+            if (attractionTime.equals("1 hour"))
+                return 10;
+
+            break;
+
+        case "2-3 hours":
+
+            if (attractionTime.equals("2-3 hours"))
+                return 20;
+
+            if (attractionTime.equals("2 hours")
+                    || attractionTime.equals("3-4 hours"))
+                return 15;
+
+            break;
+
+        case "3-4 hours":
+
+            if (attractionTime.equals("3-4 hours"))
+                return 20;
+
+            if (attractionTime.equals("2-3 hours"))
+                return 15;
+
+            break;
+
+        case "full day":
+
+            if (attractionTime.equals("full day"))
+                return 20;
+
+            return 10;
+    }
+
+    return 0;
+}
+
+private int calculateTransportScore(String attractionTime,
+                                    String transport) {
+
+    if (attractionTime == null || transport == null
+            || transport.isBlank()) {
+        return 0;
+    }
+
+    attractionTime = attractionTime.toLowerCase();
+    transport = transport.toLowerCase();
+
+    switch (transport) {
+
+        case "walking":
+
+            if (attractionTime.contains("1"))
+                return 10;
+
+            if (attractionTime.contains("2"))
+                return 8;
+
+            return 2;
+
+        case "bike":
+
+            if (attractionTime.contains("1")
+                    || attractionTime.contains("2"))
+                return 10;
+
+            if (attractionTime.contains("3"))
+                return 8;
+
+            return 5;
+
+        case "car":
+
+            return 10;
+
+        default:
+
+            return 0;
+    }
+}
+
+private int calculateRatingScore(Double rating) {
+
+    if (rating == null) {
+        return 0;
+    }
+
+    if (rating >= 4.8)
+        return 10;
+
+    if (rating >= 4.5)
+        return 8;
+
+    if (rating >= 4.0)
+        return 5;
+
+    return 2;
 }
 
 }
