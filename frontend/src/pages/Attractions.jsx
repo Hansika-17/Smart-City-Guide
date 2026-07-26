@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import "../styles/Attractions.css";
 import { useState, useEffect } from "react";
+import attractionPlaceholder from "../assets/attractions_placeholder.jpeg";
 
 function Attractions() {
 
@@ -57,7 +58,11 @@ function Attractions() {
                             <img
                                 src={attraction.imageUrl}
                                 alt={attraction.attractionName}
-                                className="attraction-image"
+                                className="modal-image"
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = attractionPlaceholder;
+                                }}
                             />
 
                             <h2>{attraction.attractionName}</h2>
@@ -91,6 +96,10 @@ function Attractions() {
                 src={selectedAttraction.imageUrl}
                 alt={selectedAttraction.attractionName}
                 className="modal-image"
+                onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = attractionPlaceholder;
+                }}
             />
 
             <h2>{selectedAttraction.attractionName}</h2>

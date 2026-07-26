@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import "../styles/Events.css";
 import { useState, useEffect } from "react";
+import eventPlaceholder from "../assets/events_placeholder.jpg";
 
 function Events() {
 
@@ -59,6 +60,10 @@ function Events() {
                                 src={event.imageUrl}
                                 alt={event.eventName}
                                 className="event-image"
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = eventPlaceholder;
+                                }}
                             />
 
                             <h2>{event.eventName}</h2>
@@ -96,6 +101,10 @@ function Events() {
                             src={selectedEvent.imageUrl}
                             alt={selectedEvent.eventName}
                             className="modal-image"
+                            onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = eventPlaceholder;
+                            }}
                         />
 
                         <h2>{selectedEvent.eventName}</h2>
