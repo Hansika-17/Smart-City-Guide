@@ -112,28 +112,21 @@ if (request.getPriceRange() != null && !request.getPriceRange().isBlank()) {
 
 
         // Filter using bestFor
-if (request.getBestFor() != null && !request.getBestFor().isEmpty()) {
+if (request.getBestFor() != null && !request.getBestFor().isBlank()) {
 
     hotels.removeIf(hotel ->
-            hotel.getBestFor() == null ||
-            !hotel.getBestFor().toLowerCase()
-                    .contains(request.getBestFor().toLowerCase()));
+            !matchesBestFor(hotel.getBestFor(), request.getBestFor()));
 
     restaurants.removeIf(restaurant ->
-            restaurant.getBestFor() == null ||
-            !restaurant.getBestFor().toLowerCase()
-                    .contains(request.getBestFor().toLowerCase()));
+            !matchesBestFor(restaurant.getBestFor(), request.getBestFor()));
 
-     attractions.removeIf(attraction ->
-        attraction.getBestFor() == null ||
-        !attraction.getBestFor().toLowerCase()
-                .contains(request.getBestFor().toLowerCase()));
+    attractions.removeIf(attraction ->
+            !matchesBestFor(attraction.getBestFor(), request.getBestFor()));
 
-     events.removeIf(event ->
-        event.getBestFor() == null ||
-        !event.getBestFor().toLowerCase()
-                .contains(request.getBestFor().toLowerCase()));
+    events.removeIf(event ->
+            !matchesBestFor(event.getBestFor(), request.getBestFor()));
 }
+
 
 // Filter using timeAvailable
 if (request.getTimeAvailable() != null && !request.getTimeAvailable().isBlank()) {
@@ -261,4 +254,97 @@ response.setEvents(events);
 
 return response;
 }
+
+// ADD THIS METHOD HERE
+
+private List<String> getPersonaKeywords(String persona) {
+
+    if (persona == null) {
+        return Collections.emptyList();
+    }
+
+    switch (persona.toLowerCase()) {
+
+        case "foodie":
+            return List.of(
+                    "foodie",
+                    "food",
+                    "local cuisine",
+                    "restaurant",
+                    "street food"
+            );
+
+        case "history lover":
+            return List.of(
+                    "history buff",
+                    "history",
+                    "heritage",
+                    "museum",
+                    "fort"
+            );
+
+        case "influencer":
+            return List.of(
+                    "photography",
+                    "influencer",
+                    "instagram",
+                    "scenic"
+            );
+
+        case "nature explorer":
+            return List.of(
+                    "nature",
+                    "park",
+                    "lake",
+                    "wildlife"
+            );
+
+        case "business traveller":
+            return List.of(
+                    "business traveller",
+                    "business"
+            );
+
+        case "student":
+            return List.of(
+                    "student"
+            );
+
+        case "family":
+            return List.of(
+                    "family"
+            );
+
+        case "couple":
+            return List.of(
+                    "couple"
+            );
+
+        case "friends":
+            return List.of(
+                    "friends"
+            );
+
+        default:
+            return List.of(persona.toLowerCase());
+    }
+}
+
+private boolean matchesBestFor(String databaseValue, String selectedPersona) {
+
+    if (databaseValue == null || selectedPersona == null) {
+        return false;
+    }
+
+    String dbValue = databaseValue.toLowerCase();
+
+    for (String keyword : getPersonaKeywords(selectedPersona)) {
+        if (dbValue.contains(keyword.toLowerCase())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 }
