@@ -17,10 +17,11 @@ function RecommendationWizard() {
         transport: ""
     });
     const [groupResult, setGroupResult] = useState(null);
+    const [activeTab, setActiveTab] = useState("hotels");
     
 
     return (
-        <div className="wizard-card">
+        <div className={`wizard-card ${step === 6 ? "recommendation-page" : ""}`}>
 
             <div className="wizard-step">
                 Step {step} of 6
@@ -374,78 +375,367 @@ function RecommendationWizard() {
             )}
 
             {step === 6 && groupResult && (
-                    <div className="recommendation-result">
+    <div className="recommendation-result">
 
-                        <h2>Your Group Recommendations</h2>
+        <h2>Your Group Recommendations</h2>
 
-                        <div className="recommendation-section">
+        <div className="recommendation-tabs">
 
-                            <h3> Hotels</h3>
+            <button
+                className={activeTab === "hotels" ? "active" : ""}
+                onClick={() => setActiveTab("hotels")}
+            >
+                Hotels
+            </button>
 
-                            {groupResult.hotels.length === 0 ? (
-                                <p>No hotels found matching your preferences.</p>
-                            ) : (
-                                groupResult.hotels.map((hotel) => (
-                                    <div className="recommendation-card" key={hotel.id}>
+            <button
+                className={activeTab === "restaurants" ? "active" : ""}
+                onClick={() => setActiveTab("restaurants")}
+            >
+                Restaurants
+            </button>
 
-                                        <img
-                                            src={hotel.imageUrl}
-                                            alt={hotel.hotelName}
-                                        />
+            <button
+                className={activeTab === "attractions" ? "active" : ""}
+                onClick={() => setActiveTab("attractions")}
+            >
+                Attractions
+            </button>
 
-                                        <h4>{hotel.hotelName}</h4>
+            <button
+                className={activeTab === "events" ? "active" : ""}
+                onClick={() => setActiveTab("events")}
+            >
+                Events
+            </button>
 
-                                        <p>
-                                            ⭐ {hotel.rating} • {hotel.city}
-                                        </p>
+        </div>
 
-                                        <button
-                                            onClick={() => window.open(hotel.website, "_blank")}
-                                        >
-                                            Book Now
-                                        </button>
+        {/* ---------------- HOTELS ---------------- */}
+
+        {activeTab === "hotels" && (
+
+            <div className="recommendation-section">
+
+                <h3>Hotels</h3>
+
+                {groupResult.hotels.length === 0 ? (
+
+                    <p>No hotels found matching your preferences.</p>
+
+                ) : (
+
+                    <div className="recommendation-grid">
+
+                        {groupResult.hotels.map((hotel) => (
+
+                            <div className="recommendation-card" key={hotel.id}>
+
+                                <img
+                                    src={hotel.imageUrl}
+                                    alt={hotel.hotelName}
+                                />
+
+                                <div className="recommendation-content">
+
+                                    <h4>{hotel.hotelName}</h4>
+
+                                    <p>
+                                        ⭐ {hotel.rating} • {hotel.city}
+                                    </p>
+
+                                    <div className="recommendation-detail">
+
+                                        <strong>Best For</strong>
+
+                                        <div className="best-for-list">
+
+                                            {hotel.bestFor.split(",").map((item, index) => (
+
+                                                <div
+                                                    className="best-for-item"
+                                                    key={index}
+                                                >
+                                                    • {item.trim()}
+                                                </div>
+
+                                            ))}
+
+                                        </div>
 
                                     </div>
-                                ))
-                            )}
 
-                        </div>
+                                    <button
+                                        onClick={() => window.open(hotel.website, "_blank")}
+                                    >
+                                        Book Now
+                                    </button>
 
+                                </div>
 
-                        <div className="recommendation-section">
-                            <h3> Restaurants</h3>
+                            </div>
 
-                            {groupResult.restaurants.length === 0 ? (
-                                <p>No restaurants found matching your preferences.</p>
-                            ) : (
-                                <p>Restaurant cards coming here...</p>
-                            )}
-                        </div>
+                        ))}
 
+                    </div>
 
-                        <div className="recommendation-section">
-                            <h3> Attractions</h3>
+                )}
 
-                            {groupResult.attractions.length === 0 ? (
-                                <p>No attractions found matching your preferences.</p>
-                            ) : (
-                                <p>Attraction cards coming here...</p>
-                            )}
-                        </div>
+            </div>
 
+        )}
 
-                        <div className="recommendation-section">
-                            <h3> Events</h3>
+        {/* ---------------- RESTAURANTS ---------------- */}
 
-                            {groupResult.events.length === 0 ? (
-                                <p>No events found matching your preferences.</p>
-                            ) : (
-                                <p>Event cards coming here...</p>
-                            )}
+        {activeTab === "restaurants" && (
+
+    <div className="recommendation-section">
+
+        <h3>Restaurants</h3>
+
+        {groupResult.restaurants.length === 0 ? (
+
+            <p>No restaurants found matching your preferences.</p>
+
+        ) : (
+
+            <div className="recommendation-grid">
+
+                {groupResult.restaurants.map((restaurant) => (
+
+                    <div
+                        className="recommendation-card"
+                        key={restaurant.id}
+                    >
+
+                        <img
+                            src={restaurant.imageUrl}
+                            alt={restaurant.restaurantName}
+                        />
+
+                        <div className="recommendation-content">
+
+                            <h4>{restaurant.restaurantName}</h4>
+
+                            <p>
+                                ⭐ {restaurant.rating} • {restaurant.city}
+                            </p>
+
+                            <p className="recommendation-detail">
+                                <strong>Cuisine</strong><br />
+                                {restaurant.cuisine}
+                            </p>
+
+                            <div className="recommendation-detail">
+
+                                <strong>Best For</strong>
+
+                                <div className="best-for-list">
+
+                                    {restaurant.bestFor.split(",").map((item, index) => (
+
+                                        <div
+                                            className="best-for-item"
+                                            key={index}
+                                        >
+                                            • {item.trim()}
+                                        </div>
+
+                                    ))}
+
+                                </div>
+
+                            </div>
+
+                            <button
+                                onClick={() =>
+                                    window.open(
+                                        restaurant.mapLink,
+                                        "_blank"
+                                    )
+                                }
+                            >
+                                View on Maps
+                            </button>
+
                         </div>
 
                     </div>
-                )}
+
+                ))}
+
+            </div>
+
+        )}
+
+    </div>
+
+)}
+
+        {/* ---------------- ATTRACTIONS ---------------- */}
+
+        {activeTab === "attractions" && (
+
+    <div className="recommendation-section">
+
+        <h3>Attractions</h3>
+
+        {groupResult.attractions.length === 0 ? (
+
+            <p>No attractions found matching your preferences.</p>
+
+        ) : (
+
+            <div className="recommendation-grid">
+
+                {groupResult.attractions.map((attraction) => (
+
+                    <div
+                        className="recommendation-card"
+                        key={attraction.id}
+                    >
+
+                        <img
+                            src={attraction.imageUrl}
+                            alt={attraction.attractionName}
+                        />
+
+                        <div className="recommendation-content">
+
+                            <h4>{attraction.attractionName}</h4>
+
+                            <p>
+                                ⭐ {attraction.rating} • {attraction.city}
+                            </p>
+
+                            <p className="recommendation-detail">
+                                <strong>Time Required</strong><br />
+                                {attraction.timeRequired}
+                            </p>
+
+                            <div className="recommendation-detail">
+
+                                <strong>Best For</strong>
+
+                                <div className="best-for-list">
+
+                                    {attraction.bestFor.split(",").map((item, index) => (
+
+                                        <div
+                                            className="best-for-item"
+                                            key={index}
+                                        >
+                                            • {item.trim()}
+                                        </div>
+
+                                    ))}
+
+                                </div>
+
+                            </div>
+
+                            <button
+                                onClick={() =>
+                                    window.open(
+                                        attraction.mapLink,
+                                        "_blank"
+                                    )
+                                }
+                            >
+                                View on Maps
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                ))}
+
+            </div>
+
+        )}
+
+    </div>
+
+)}
+
+        {/* ---------------- EVENTS ---------------- */}
+
+        {activeTab === "events" && (
+
+    <div className="recommendation-section">
+
+        <h3>Events</h3>
+
+        {groupResult.events.length === 0 ? (
+
+            <p>No events found matching your preferences.</p>
+
+        ) : (
+
+            <div className="recommendation-grid">
+
+                {groupResult.events.map((event) => (
+
+                    <div
+                        className="recommendation-card"
+                        key={event.id}
+                    >
+
+                        <img
+                            src={event.imageUrl}
+                            alt={event.eventName}
+                        />
+
+                        <div className="recommendation-content">
+
+                            <h4>{event.eventName}</h4>
+
+                            <p>
+                                📍 {event.city}
+                            </p>
+
+                            <p className="recommendation-detail">
+                                <strong>Category</strong><br />
+                                {event.category}
+                            </p>
+
+                            <div className="recommendation-detail">
+
+                                <strong>Best For</strong>
+
+                                <div className="best-for-list">
+
+                                    {event.bestFor.split(",").map((item, index) => (
+
+                                        <div
+                                            className="best-for-item"
+                                            key={index}
+                                        >
+                                            • {item.trim()}
+                                        </div>
+
+                                    ))}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                ))}
+
+            </div>
+
+        )}
+
+    </div>
+
+)}
+    </div>
+)}
 
         </div>
     );

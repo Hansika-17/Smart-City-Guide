@@ -66,6 +66,11 @@ for(Hotel hotel : hotels){
 hotels.sort((h1,h2)->
     Integer.compare(hotelScores.get(h2),hotelScores.get(h1)));
 
+    hotels = hotels.subList(
+        0,
+        Math.min(5, hotels.size())
+);
+
     List<Restaurant> restaurants =
             restaurantRepository.findByCity(request.getCity());
     Map<Restaurant,Integer> restaurantScores=new HashMap<>();
@@ -90,7 +95,12 @@ for(Restaurant restaurant:restaurants){
 }
 
 restaurants.sort((r1,r2)->
-    Integer.compare(restaurantScores.get(r2),restaurantScores.get(r1)));    
+    Integer.compare(restaurantScores.get(r2),restaurantScores.get(r1)));
+    
+    restaurants = restaurants.subList(
+        0,
+        Math.min(5, restaurants.size())
+);
         
     List<Attraction> attractions =
                 attractionRepository.findByCity(request.getCity());
@@ -120,7 +130,12 @@ for(Attraction attraction:attractions){
 }
 
 attractions.sort((a1,a2)->
-Integer.compare(attractionScores.get(a2),attractionScores.get(a1)));        
+Integer.compare(attractionScores.get(a2),attractionScores.get(a1)));
+
+attractions = attractions.subList(
+        0,
+        Math.min(5, attractions.size())
+);
 
         List<Event> events =
                 eventRepository.findByCity(request.getCity());
@@ -139,7 +154,12 @@ for(Event event:events){
 }
 
 events.sort((e1,e2)->
-Integer.compare(eventScores.get(e2),eventScores.get(e1)));        
+Integer.compare(eventScores.get(e2),eventScores.get(e1)));  
+
+events = events.subList(
+        0,
+        Math.min(5, events.size())
+);
 
     // Surprise Me
 if (request.isSurpriseMe()) {
