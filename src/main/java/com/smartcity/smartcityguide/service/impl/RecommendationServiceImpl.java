@@ -38,14 +38,71 @@ public class RecommendationServiceImpl implements RecommendationService {
         RecommendationResponse response = new RecommendationResponse();
 
         List<Hotel> hotels =
-                hotelRepository.findByCityAndPriceRange(
-                        request.getCity(),
-                        request.getPriceRange());
+            hotelRepository.findByCity(request.getCity());
+            // Filter hotels based on selected budget
+if (request.getPriceRange() != null && !request.getPriceRange().isBlank()) {
+
+    String budget = request.getPriceRange().toLowerCase();
+
+    hotels.removeIf(hotel -> {
+
+        if (hotel.getPriceRange() == null) {
+            return true;
+        }
+
+        String price = hotel.getPriceRange().toLowerCase();
+
+        switch (budget) {
+
+    case "budget":
+        // No budget hotels in DB, so recommend Premium hotels
+        return !price.contains("premium");
+
+    case "mid-range":
+        // Recommend Premium and Luxury
+        return !(price.contains("premium") || price.contains("luxury"));
+
+    case "luxury":
+        // Only Luxury hotels
+        return !price.contains("luxury");
+
+    default:
+        return false;
+}
+    });
+}
 
         List<Restaurant> restaurants =
-                restaurantRepository.findByCityAndPriceRange(
-                        request.getCity(),
-                        request.getPriceRange());
+            restaurantRepository.findByCity(request.getCity());
+            // Filter restaurants based on selected budget
+if (request.getPriceRange() != null && !request.getPriceRange().isBlank()) {
+
+    String budget = request.getPriceRange().toLowerCase();
+
+    restaurants.removeIf(restaurant -> {
+
+        if (restaurant.getPriceRange() == null) {
+            return true;
+        }
+
+        String price = restaurant.getPriceRange().toLowerCase();
+
+        switch (budget) {
+
+            case "budget":
+                return price.contains("premium");
+
+            case "mid-range":
+                return false;
+
+            case "luxury":
+                return !price.contains("premium");
+
+            default:
+                return false;
+        }
+    });
+}
 
         List<Attraction> attractions =
                 attractionRepository.findByCity(request.getCity());
@@ -55,28 +112,21 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 
         // Filter using bestFor
-if (request.getBestFor() != null && !request.getBestFor().isEmpty()) {
+if (request.getBestFor() != null && !request.getBestFor().isBlank()) {
 
     hotels.removeIf(hotel ->
-            hotel.getBestFor() == null ||
-            !hotel.getBestFor().toLowerCase()
-                    .contains(request.getBestFor().toLowerCase()));
+            !matchesBestFor(hotel.getBestFor(), request.getBestFor()));
 
     restaurants.removeIf(restaurant ->
-            restaurant.getBestFor() == null ||
-            !restaurant.getBestFor().toLowerCase()
-                    .contains(request.getBestFor().toLowerCase()));
+            !matchesBestFor(restaurant.getBestFor(), request.getBestFor()));
 
-     attractions.removeIf(attraction ->
-        attraction.getBestFor() == null ||
-        !attraction.getBestFor().toLowerCase()
-                .contains(request.getBestFor().toLowerCase()));
+    attractions.removeIf(attraction ->
+            !matchesBestFor(attraction.getBestFor(), request.getBestFor()));
 
-     events.removeIf(event ->
-        event.getBestFor() == null ||
-        !event.getBestFor().toLowerCase()
-                .contains(request.getBestFor().toLowerCase()));
+    events.removeIf(event ->
+            !matchesBestFor(event.getBestFor(), request.getBestFor()));
 }
+
 
 // Filter using timeAvailable
 if (request.getTimeAvailable() != null && !request.getTimeAvailable().isBlank()) {
@@ -164,9 +214,14 @@ if (request.getTransport() != null && !request.getTransport().isBlank()) {
         }
     });
 }
+     
+    System.out.println("Hotels: " + hotels.size());
+    System.out.println("Restaurants: " + restaurants.size());
+    System.out.println("Attractions: " + attractions.size());
+    System.out.println("Events: " + events.size());
 
-        // Surprise Me
-        if (request.isSurpriseMe()) {
+    // Surprise Me
+if (request.isSurpriseMe()) {
 
     Collections.shuffle(hotels);
     Collections.shuffle(restaurants);
@@ -177,23 +232,119 @@ if (request.getTransport() != null && !request.getTransport().isBlank()) {
         hotels = hotels.subList(0, 1);
     }
 
-    if (restaurants.size() > 1) {
-        restaurants = restaurants.subList(0, 1);
+    if (restaurants.size() > 2) {
+        restaurants = restaurants.subList(0, 2);
     }
 
     if (attractions.size() > 2) {
         attractions = attractions.subList(0, 2);
     }
 
-    if (events.size() > 1) {
-        events = events.subList(0, 1);
+    if (events.size() > 2) {
+        events = events.subList(0, 2);
     }
 }
+
+
+// Set response data
 response.setHotels(hotels);
 response.setRestaurants(restaurants);
 response.setAttractions(attractions);
-response.setEvents(events);
+response.setEvents(events);    
 
 return response;
 }
+
+// ADD THIS METHOD HERE
+
+private List<String> getPersonaKeywords(String persona) {
+
+    if (persona == null) {
+        return Collections.emptyList();
+    }
+
+    switch (persona.toLowerCase()) {
+
+        case "foodie":
+            return List.of(
+                    "foodie",
+                    "food",
+                    "local cuisine",
+                    "restaurant",
+                    "street food"
+            );
+
+        case "history lover":
+            return List.of(
+                    "history buff",
+                    "history",
+                    "heritage",
+                    "museum",
+                    "fort"
+            );
+
+        case "influencer":
+            return List.of(
+                    "photography",
+                    "influencer",
+                    "instagram",
+                    "scenic"
+            );
+
+        case "nature explorer":
+            return List.of(
+                    "nature",
+                    "park",
+                    "lake",
+                    "wildlife"
+            );
+
+        case "business traveller":
+            return List.of(
+                    "business traveller",
+                    "business"
+            );
+
+        case "student":
+            return List.of(
+                    "student"
+            );
+
+        case "family":
+            return List.of(
+                    "family"
+            );
+
+        case "couple":
+            return List.of(
+                    "couple"
+            );
+
+        case "friends":
+            return List.of(
+                    "friends"
+            );
+
+        default:
+            return List.of(persona.toLowerCase());
+    }
+}
+
+private boolean matchesBestFor(String databaseValue, String selectedPersona) {
+
+    if (databaseValue == null || selectedPersona == null) {
+        return false;
+    }
+
+    String dbValue = databaseValue.toLowerCase();
+
+    for (String keyword : getPersonaKeywords(selectedPersona)) {
+        if (dbValue.contains(keyword.toLowerCase())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 }
