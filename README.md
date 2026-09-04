@@ -538,22 +538,7 @@ If a credential is accidentally exposed:
 
 Removing a secret from the latest version of a repository does not remove it from Git history.
 
-## Screenshots and Demo
 
-Add application screenshots here, such as:
-
-- Home Page
-- Hotel Search
-- Restaurant Search
-- Event Search
-- AI Travel Assistant
-- AI Query Results
-
-Example:
-
-```markdown
-![Home Page](screenshots/home-page.png)
-```
 
 ## Future Enhancements
 
